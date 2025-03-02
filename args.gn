@@ -1,0 +1,23 @@
+# Build arguments go here.
+# See "gn args <out_dir> --list" for available build arguments.
+target_os="android"
+target_cpu="arm64"
+android_channel="stable"
+chrome_public_manifest_package="org.google.chromium"
+is_official_build=true
+is_component_build=false
+chrome_pgo_phase=0
+dcheck_always_on=false
+is_debug=false
+is_java_debug=false
+symbol_level=0
+blink_symbol_level=0
+v8_symbol_level=0
+is_clang=true
+enable_widevine=true
+#android_keystore_name = "production"
+#android_keystore_password = "HERE_YOUR_ANDROID_KEYSTORE_PASSWORD"
+#android_keystore_path = "../../../keystore.jks"
+use_thin_lto=true
+#enable_extensions=true
+#enable_guest_view=true
