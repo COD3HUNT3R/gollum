@@ -22,7 +22,6 @@ nonessential_dirs = (
     'third_party/blink/web_tests',
     'third_party/hunspell_dictionaries',
     'third_party/hunspell/tests',
-    'third_party/jdk/current',
     'third_party/jdk/extras',
     'third_party/liblouis/src/tests/braille-specs',
     'third_party/xdg-utils/tests',
