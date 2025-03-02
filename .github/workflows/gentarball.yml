@@ -96,6 +96,8 @@ jobs:
           src/build/util/lastchange.py -m GPU_LISTS_VERSION --revision-id-only --header src/gpu/config/gpu_lists_version.h
           src/build/util/lastchange.py -m SKIA_COMMIT_HASH -s src/third_party/skia --header src/skia/ext/skia_commit_hash.h
           src/build/util/lastchange.py -s src/third_party/dawn --revision src/gpu/webgpu/DAWN_VERSION
+          cd src && rm -rf .git
+          cd .. && du -sh ../$SRCDIR
           wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
           chmod +x export_tarball.py
           ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
