@@ -98,7 +98,12 @@ jobs:
         run: |
           cd $SRCDIR/src
           autoninja -C out/Release base
-          ls -lsh out/Release/apks
+
+      - name: Build content/public/common
+        shell: bash
+        run: |
+          cd $SRCDIR/src
+          autoninja -C out/Release content/public/common
           cd ..
           wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
           chmod +x export_tarball.py
@@ -175,33 +180,27 @@ jobs:
           cd chromium-$VERSION
           autoninja -C out/Release content/public/common
 
-      - name: Build content/public/common
-        shell: bash
-        run: |
-          cd $SRCDIR/$VERSION
-          autoninja -C out/Release content/public/common
-
       - name: Build content/public/browser
         shell: bash
         run: |
-          cd $SRCDIR/$VERSION
+          cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release content/public/browser
 
       - name: Build components/guest_view/common
         shell: bash
         run: |
-          cd $SRCDIR/$VERSION
+          cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release components/guest_view/common
 
       - name: Build components/guest_view/renderer
         shell: bash
         run: |
-          cd $SRCDIR/$VERSION
+          cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release components/guest_view/renderer
 
       - name: Build apk
         shell: bash
         run: |
-          cd $SRCDIR/$VERSION
+          cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release chrome_public_apk
           ls -lsh out/Release/apks
