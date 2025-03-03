@@ -172,14 +172,24 @@ jobs:
         run: |
           cd $SRCDIR/$VERSION
           autoninja -C out/Release content/public/common
-          ls -lsh out/Release/apks
 
-      - name: Build content/public/gollumwser
+      - name: Build content/public/browser
         shell: bash
         run: |
           cd $SRCDIR/$VERSION
-          autoninja -C out/Release content/public/gollumwser
-          ls -lsh out/Release/apks
+          autoninja -C out/Release content/public/browser
+
+      - name: Build components/guest_view/common
+        shell: bash
+        run: |
+          cd $SRCDIR/$VERSION
+          autoninja -C out/Release components/guest_view/common
+
+      - name: Build components/guest_view/renderer
+        shell: bash
+        run: |
+          cd $SRCDIR/$VERSION
+          autoninja -C out/Release components/guest_view/renderer
 
       - name: Build apk
         shell: bash
