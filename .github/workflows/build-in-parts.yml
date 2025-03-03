@@ -102,12 +102,15 @@ jobs:
           cd $SRCDIR/src
           autoninja -C out/Release base
           ls -lsh out/Release/apks
+          wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
+          chmod +x export_tarball.py
+          ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: my-artifact
-          path: /home/runner/work/gollum/gollum/chromium-src
+          name: chromium-src
+          path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
 
   build2:
     needs: build1
@@ -151,26 +154,26 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: my-artifact
+          name: chromium-src
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Build content/public/common
         shell: bash
         run: |
-          cd $SRCDIR/src
+          cd $SRCDIR/$VERSION
           autoninja -C out/Release content/public/common
           ls -lsh out/Release/apks
 
       - name: Build content/public/gollumwser
         shell: bash
         run: |
-          cd $SRCDIR/src
+          cd $SRCDIR/$VERSION
           autoninja -C out/Release content/public/gollumwser
           ls -lsh out/Release/apks
 
       - name: Build apk
         shell: bash
         run: |
-          cd $SRCDIR/src
+          cd $SRCDIR/$VERSION
           autoninja -C out/Release chrome_public_apk
           ls -lsh out/Release/apks
