@@ -170,10 +170,10 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR
-          pwd && ls -lsh
           tar -xf chromium-$VERSION.tar.xz
+          pwd && ls -lsh
+          cd chromium-$VERSION
           autoninja -C out/Release content/public/common
-          ls -lsh out/Release/apks
 
       - name: Build content/public/common
         shell: bash
