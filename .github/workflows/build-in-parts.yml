@@ -176,8 +176,9 @@ jobs:
         run: |
           cd $SRCDIR
           tar -xf chromium-$VERSION.tar.xz
-          pwd && ls -lsh
+          rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
+          pwd && ls -lsh
           autoninja -C out/Release content/public/common
 
       - name: Build content/public/browser
