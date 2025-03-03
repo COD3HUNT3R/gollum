@@ -102,6 +102,7 @@ jobs:
           cd $SRCDIR/src
           autoninja -C out/Release base
           ls -lsh out/Release/apks
+          cd ..
           wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
           chmod +x export_tarball.py
           ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
@@ -156,6 +157,15 @@ jobs:
         with:
           name: chromium-src
           path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Extract tar
+        shell: bash
+        run: |
+          cd $SRCDIR
+          pwd && ls -lsh
+          tar -xf chromium-$VERSION.tar.xz
+          autoninja -C out/Release content/public/common
+          ls -lsh out/Release/apks
 
       - name: Build content/public/common
         shell: bash
