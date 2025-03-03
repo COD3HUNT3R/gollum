@@ -166,7 +166,6 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         run: |
           cd $SRCDIR
-          cat .gclient
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
