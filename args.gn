@@ -2,6 +2,8 @@
 # See "gn args <out_dir> --list" for available build arguments.
 target_os="android"
 target_cpu="arm64"
+android_channel="stable"
+chrome_public_manifest_package="org.google.chromium"
 is_official_build=true
 is_component_build=false
 chrome_pgo_phase=0
@@ -13,7 +15,6 @@ blink_symbol_level=0
 v8_symbol_level=0
 is_clang=true
 enable_widevine=true
-chrome_public_manifest_package="org.google.chromium"
 #android_keystore_name = "production"
 #android_keystore_password = "HERE_YOUR_ANDROID_KEYSTORE_PASSWORD"
 #android_keystore_path = "../../../keystore.jks"
