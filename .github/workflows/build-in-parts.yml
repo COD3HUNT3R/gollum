@@ -162,6 +162,12 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-src
+          path: /home/runner/work/gollum/gollum/chromium-src
+
       - name: Clone depot_tools
         shell: bash
         env:
@@ -172,12 +178,6 @@ jobs:
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
           sudo apt install -y ninja-build gperf
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: chromium-src
-          path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Extract tar
         shell: bash
