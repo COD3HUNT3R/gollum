@@ -196,12 +196,6 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release content/public/browser
 
-      - name: Build components/guest_view/common
-        shell: bash
-        run: |
-          cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release components/guest_view/common
-
       - name: Build components/guest_view/renderer
         shell: bash
         run: |
