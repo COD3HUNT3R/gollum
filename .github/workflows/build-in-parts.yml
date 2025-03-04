@@ -109,11 +109,19 @@ jobs:
           chmod +x export_tarball.py
           ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
 
+      - name: Compress out dir
+        shell: bash
+        run: |
+          cd $SRCDIR/src
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: chromium-src
-          path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
+          path: |
+            /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
+            /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
 
   build2:
     needs: build1
@@ -154,12 +162,6 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: chromium-src
-          path: /home/runner/work/gollum/gollum/chromium-src
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -171,15 +173,22 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
           sudo apt install -y ninja-build gperf
 
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-src
+          path: /home/runner/work/gollum/gollum/chromium-src
+
       - name: Extract tar
         shell: bash
         run: |
-          cd $SRCDIR
+          cd $SRCDIR && ls -lsh
           tar -xf chromium-$VERSION.tar.xz
-          rm -f chromium-$VERSION.tar.xz
-          cd chromium-$VERSION
+          tar -xf out.tar.zst
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          mv out src && cd chromium-$VERSION
           pwd && ls -lsh
-          autoninja -C out/Release content/public/common
 
       - name: Build content/public/browser
         shell: bash
