@@ -187,7 +187,7 @@ jobs:
           tar -xf out.tar.zst
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
-          mv out src && cd chromium-$VERSION
+          mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
 
       - name: Build content/public/browser
