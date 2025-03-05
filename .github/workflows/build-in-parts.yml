@@ -196,11 +196,11 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release content/public/browser
 
-      - name: Build components/guest_view/renderer
+      - name: Build chrome/gpu
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release components/guest_view/renderer
+          autoninja -C out/Release chrome/gpu
 
       - name: Build apk
         shell: bash
