@@ -202,6 +202,24 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release chrome/gpu
 
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd $SRCDIR/src
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
+          cd ..
+          wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
+          chmod +x export_tarball.py
+          ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-src
+          path: |
+            /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
+            /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
+
   build3:
       needs: build2
       runs-on: ubuntu-latest
