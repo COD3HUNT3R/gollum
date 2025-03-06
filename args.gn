@@ -18,6 +18,6 @@ enable_widevine=true
 #android_keystore_name = "production"
 #android_keystore_password = "HERE_YOUR_ANDROID_KEYSTORE_PASSWORD"
 #android_keystore_path = "../../../keystore.jks"
-#use_thin_lto=true
+use_thin_lto=true
 #enable_extensions=true
 #enable_guest_view=true
