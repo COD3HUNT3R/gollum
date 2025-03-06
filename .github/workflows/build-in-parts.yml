@@ -205,12 +205,12 @@ jobs:
       - name: Compress artifacts
         shell: bash
         run: |
-          cd $SRCDIR/src
+          cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
           cd ..
           wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
           chmod +x export_tarball.py
-          ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
+          ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir chromium-$VERSION/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
