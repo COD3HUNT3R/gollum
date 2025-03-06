@@ -212,6 +212,11 @@ jobs:
           chmod +x export_tarball.py
           ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir chromium-$VERSION/
 
+      - name: Delete existing artifact to prevent conflicts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: chromium-src
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -305,3 +310,9 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release chrome_public_apk
           ls -lsh out/Release/apks
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apks
+          path: /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/Release/apks
