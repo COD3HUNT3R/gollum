@@ -287,6 +287,18 @@ jobs:
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
 
+      - name: Build chrome_java
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          autoninja -C out/Release chrome_java
+
+      - name: Build chrome/browser
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          autoninja -C out/Release chrome/browser
+
       - name: Build apk
         shell: bash
         run: |
