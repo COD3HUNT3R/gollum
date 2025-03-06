@@ -1,4 +1,4 @@
-name: partbuild
+name: partbuildarm
 
 # Controls when the workflow will run
 on:
