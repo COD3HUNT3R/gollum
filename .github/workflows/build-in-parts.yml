@@ -304,6 +304,12 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release chrome/browser
 
+      - name: Build chrome/common
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          autoninja -C out/Release chrome/common
+
       - name: Build apk
         shell: bash
         run: |
