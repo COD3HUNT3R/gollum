@@ -107,7 +107,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-src-$VERSION
+          name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
 
 
@@ -204,5 +204,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: linux-src-$VERSION
+          name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
