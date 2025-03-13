@@ -11,7 +11,7 @@ jobs:
   build1:
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.39
+      VERSION: 134.0.6998.95
       SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -127,7 +127,7 @@ jobs:
     needs: build1
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.39
+      VERSION: 134.0.6998.95
       SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -229,7 +229,7 @@ jobs:
       needs: build2
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.39
+        VERSION: 134.0.6998.95
         SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
@@ -298,17 +298,17 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release chrome_java
 
-      - name: Build chrome/browser
-        shell: bash
-        run: |
-          cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release chrome/browser
-
       - name: Build chrome/common
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/Release chrome/common
+
+      - name: Build chrome/browser
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          autoninja -C out/Release chrome/browser
 
       - name: Build apk
         shell: bash
