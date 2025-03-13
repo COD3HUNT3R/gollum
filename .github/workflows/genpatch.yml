@@ -13,11 +13,13 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  # This workflow contains a single job called "build"
   linux:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.88
+      VMAJOR: 134
+      VERSION: 134.0.6998.95
       SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -52,21 +54,77 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download and extract rpm
+      - name: Setup src dir
         run: |
           mkdir -p $SRCDIR && cd $SRCDIR
-          wget https://kojipkgs.fedoraproject.org//packages/chromium/$VERSION/1.el9/src/chromium-$VERSION-1.el9.src.rpm
-          rpm2archive chromium-$VERSION-1.el9.src.rpm
+          cat > .gclient <<EOF
+          solutions = [
+            {
+              "name": "src",
+              "url": "https://chromium.googlesource.com/chromium/src.git@$VERSION",
+              "managed": False,
+              "custom_deps": {},
+              "custom_vars": {},
+            },
+          ]
+          target_os = ["linux"]
+          EOF
 
-      - name: Generate patches
+      - name: Clone depot_tools
+        shell: bash
         run: |
           cd $SRCDIR
-          ls -lsh
+          cat .gclient
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+
+      - name: Adding depot_tools to path
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+
+      - name: Clone source and do gclient sync
+        shell: bash
+        run: |
+          cd $SRCDIR
+          echo "PATH: $PATH"
+          echo "gclient sync chromium-$VERSION..." 
+          gclient sync --no-history --nohooks
+          du -sh ../$SRCDIR
+          gclient runhooks
+          src/build/util/lastchange.py -o src/build/util/LASTCHANGE
+          src/build/util/lastchange.py -m GPU_LISTS_VERSION --revision-id-only --header src/gpu/config/gpu_lists_version.h
+          src/build/util/lastchange.py -m SKIA_COMMIT_HASH -s src/third_party/skia --header src/skia/ext/skia_commit_hash.h
+          src/build/util/lastchange.py -s src/third_party/dawn --revision src/gpu/webgpu/DAWN_VERSION
+          cd src && rm -rf .git
+          cd .. && du -sh ../$SRCDIR
+          wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
+          chmod +x export_tarball.py
+          ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
+          ls -lsh && pwd
+
+      - name: Generate patches
+        shell: bash
+        run: |
+          cd $SRCDIR
+          mv *.tar.xz .. && cd ..
+          rm -rf $SRCDIR
+          ls -lsh && pwd
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION a
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION b
+          rm -f chromium-$VERSION.tar.xz
+          cd b
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          cd ..
+          diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
+          ls -lsh && pwd
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: linux-patches-${{ env.VERSION }}
+          name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.patch
 
 
@@ -75,6 +133,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
+      VMAJOR: 134
       VERSION: 134.0.6998.95
       SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -133,7 +192,6 @@ jobs:
           cat .gclient
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
-          
 
       - name: Adding depot_tools to path
         env:
@@ -172,10 +230,14 @@ jobs:
           tar -xf chromium-$VERSION.tar.xz
           mv chromium-$VERSION b
           rm -f chromium-$VERSION.tar.xz
+          cd b
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          cd ..
+          diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
           ls -lsh && pwd
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-src-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
+          name: android-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/*.patch
