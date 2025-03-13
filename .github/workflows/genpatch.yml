@@ -168,6 +168,10 @@ jobs:
           rm -rf $SRCDIR
           ls -lsh && pwd
           tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION a
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION b
+          rm -f chromium-$VERSION.tar.xz
           ls -lsh && pwd
 
       - name: Upload artifact
