@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src/*.patch
+          path: /home/runner/work/gollum/gollum/*.patch
 
 
   # This workflow contains a single job called "build"
@@ -242,4 +242,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src/*.patch
+          path: /home/runner/work/gollum/gollum/*.patch
