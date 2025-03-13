@@ -118,6 +118,7 @@ jobs:
           cd b
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
           cd ..
+          ls -lsh && pwd
           diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
           ls -lsh && pwd
 
