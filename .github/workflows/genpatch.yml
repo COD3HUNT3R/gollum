@@ -105,6 +105,7 @@ jobs:
 
       - name: Generate patches
         shell: bash
+        continue-on-error: true
         run: |
           cd $SRCDIR
           mv *.tar.xz .. && cd ..
