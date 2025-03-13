@@ -56,7 +56,7 @@ jobs:
         run: |
           mkdir -p $SRCDIR && cd $SRCDIR
           wget https://kojipkgs.fedoraproject.org//packages/chromium/$VERSION/1.el9/src/chromium-$VERSION-1.el9.src.rpm
-          rpm2cpio chromium-$VERSION-1.el9.src.rpm | cpio -i
+          rpm2archive chromium-$VERSION-1.el9.src.rpm
           ls -lsh
 
       - name: Upload artifact
