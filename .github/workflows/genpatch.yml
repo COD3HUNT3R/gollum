@@ -57,6 +57,10 @@ jobs:
           mkdir -p $SRCDIR && cd $SRCDIR
           wget https://kojipkgs.fedoraproject.org//packages/chromium/$VERSION/1.el9/src/chromium-$VERSION-1.el9.src.rpm
           rpm2archive chromium-$VERSION-1.el9.src.rpm
+
+      - name: Generate patches
+        run: |
+          cd $SRCDIR
           ls -lsh
 
       - name: Upload artifact
