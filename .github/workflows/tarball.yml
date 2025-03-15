@@ -223,7 +223,7 @@ jobs:
         run: |
           mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
           curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/args.gn
-          ls -lsh
+          ls
 
       - name: Clone depot_tools
         shell: bash
