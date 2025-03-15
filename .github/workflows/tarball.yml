@@ -249,6 +249,7 @@ jobs:
 
       - name: Setup src dir
         run: |
+          sudo apt install libfuse2t64
           mkdir -p $SRCDIR && cd $SRCDIR
           cat > .gclient <<EOF
           solutions = [
