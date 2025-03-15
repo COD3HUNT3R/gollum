@@ -230,6 +230,7 @@ jobs:
         run: |
           cd ${{ env.SRCDIR }}
           cat .gclient
+          git config --global depot-tools.allowGlobalGitConfig true
           echo "Cloning depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
 
