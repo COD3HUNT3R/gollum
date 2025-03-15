@@ -222,9 +222,8 @@ jobs:
       - name: Setup src dir
         run: |
           mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
-          wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/args.gn
+          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/args.gn
           ls -lsh
-
 
       - name: Clone depot_tools
         shell: bash
