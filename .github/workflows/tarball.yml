@@ -221,7 +221,7 @@ jobs:
 
       - name: Setup src dir
         run: |
-          mkdir -p $SRCDIR && cd $SRCDIR
+          mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
           wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/args.gn
           ls -lsh
 
