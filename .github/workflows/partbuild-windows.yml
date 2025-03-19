@@ -1,0 +1,214 @@
+name: partbuild-windows
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  windows:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    env:
+      VERSION: 134.0.6998.166
+      SRCDIR: chromium-src
+      DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Setup src dir
+        run: |
+          mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
+          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient
+          ls
+
+      - name: Clone depot_tools
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}
+          cat .gclient
+          git config --global depot-tools.allowGlobalGitConfig true
+          echo "Cloning depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+
+      - name: Adding depot_tools to path
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: echo "::add-path::$env:GITHUB_WORKSPACE/chromium-src/depot_tools"
+
+      - name: Clone source and do gclient sync
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}
+          echo "PATH: $PATH"
+          echo "gclient sync chromium-$VERSION..." 
+          gclient sync --no-history --nohooks
+          du -sh ../${{ env.SRCDIR }}
+          gclient runhooks
+          src/build/util/lastchange.py -o src/build/util/LASTCHANGE
+          src/build/util/lastchange.py -m GPU_LISTS_VERSION --revision-id-only --header src/gpu/config/gpu_lists_version.h
+          src/build/util/lastchange.py -m SKIA_COMMIT_HASH -s src/third_party/skia --header src/skia/ext/skia_commit_hash.h
+          src/build/util/lastchange.py -s src/third_party/dawn --revision src/gpu/webgpu/DAWN_VERSION
+          cd src && rm -rf .git
+          cd .. && du -sh ../${{ env.SRCDIR }}
+          curl -o export_tarball.py https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
+          chmod +x export_tarball.py
+          ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
+          ls -lsh
+          pwd
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-src-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src\*.tar.xz
+
+  build1:
+    needs: windows
+    runs-on: windows-latest
+    env:
+      VERSION: 134.0.6998.166
+      SRCDIR: chromium-src
+      DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+      MSYS: winsymlinks:native
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-src-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' 
+
+      - name: Clone depot_tools
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+          echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+          echo "::add-path::C:/hostedtoolcache/windows/Python/3.12.9/x64"
+
+      - name: Extract tar
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd ${{ env.SRCDIR }} && ls -lsh
+          tar -xf chromium-$VERSION.tar.xz
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz
+          cd chromium-$VERSION
+          pwd && ls -lsh
+          mkdir -p out/release && cd out/release
+          curl.exe -o args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/windows-args.gn
+          cd ../.. && pwd && ls -lsh
+          gn gen out/release
+
+      - name: Build content/public/browser
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          autoninja -C out/release content/public/browser
+
+      - name: Build chrome/gpu
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          autoninja -C out/release chrome/gpu
+
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf ${{ github.workspace }}/chromium-src/out.tar.zst ./out
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out
+          path: ${{ github.workspace }}\chromium-src\out.tar.zst
+
+  build2:
+      needs: build1
+      runs-on: windows-latest
+      env:
+        VERSION: 134.0.6998.166
+        SRCDIR: chromium-src
+        DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+        MSYS: winsymlinks:native
+    # Steps represent a sequence of tasks that will be executed as part of the job
+      steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-src-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-out
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Clone depot_tools
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+          echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+
+      - name: Extract tar
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }} && ls
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf out.tar.zst
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          mv out chromium-$VERSION && cd chromium-$VERSION
+          pwd && ls -lsh
+
+      - name: Build chrome_java
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          autoninja -C out/release chrome_java
+
+      - name: Build chrome/common
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          autoninja -C out/release chrome/common
+
+      - name: Build chrome/browser
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          autoninja -C out/release chrome/browser
+
+      - name: Build chrome
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          autoninja -C out/release chrome
+          autoninja -C out/release chrome_sandbox
+          autoninja -C out/release chromedriver
+          autoninja -C out/release installer
+          ls out/release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: ${{ github.workspace }}\chromium-src\chromium-$VERSION\out\release\*.exe
