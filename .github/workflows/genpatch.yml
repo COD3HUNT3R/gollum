@@ -252,7 +252,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VMAJOR: 134
-      VERSION: 134.0.6998.95
+      VERSION: 134.0.6998.108
       SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
