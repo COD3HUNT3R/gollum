@@ -16,7 +16,7 @@ jobs:
   # This workflow contains a single job called "build"
   android:
     # The type of runner that the job will run on
-    if: github.repository == 'COD3HUNT3R/gollum'
+    if: ${{ github.ref_name }} == ${{ env.VERSION }}
     runs-on: ubuntu-latest
     env:
       VERSION: 134.0.6998.108
