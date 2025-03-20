@@ -1,4 +1,9 @@
-name: partbuild-windows
+# wayland html select menubar bug. Disable wayland for now
+ozone_auto_platforms=false
+ozone_platform_x11=true
+ozone_platform="x11"
+# Disabling remoting because it needs wayland
+enable_remoting=falsename: partbuild-windows
 
 # Controls when the workflow will run
 on:
@@ -67,6 +72,7 @@ jobs:
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         run: |
+          sudo apt install libfuse2t64
           cd $SRCDIR
           cat .gclient
           echo "Clone depot_tools..."
