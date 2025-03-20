@@ -1,23 +1,31 @@
 # Build arguments go here.
 # See "gn args <out_dir> --list" for available build arguments.
-target_os="android"
-target_cpu="arm64"
-android_channel="stable"
-chrome_public_manifest_package="org.google.chromium"
+target_os="linux"
 is_official_build=true
 is_component_build=false
 chrome_pgo_phase=0
 dcheck_always_on=false
 is_debug=false
-is_java_debug=false
 symbol_level=0
 blink_symbol_level=0
 v8_symbol_level=0
 is_clang=true
-enable_widevine=true
-#android_keystore_name = "production"
-#android_keystore_password = "HERE_YOUR_ANDROID_KEYSTORE_PASSWORD"
-#android_keystore_path = "../../../keystore.jks"
+use_lld=true
 use_thin_lto=true
-#enable_extensions=true
-#enable_guest_view=true
+enable_stripping=true
+enable_update_notifications=true
+enable_updater=true
+enable_widevine=true
+treat_warnings_as_errors=false
+optimize_webui=true
+enable_linux_installer=true
+ffmpeg_branding="Chrome"
+proprietary_codecs=true
+use_vaapi=true
+# wayland html select menubar bug. Disable wayland for now
+ozone_auto_platforms=false
+ozone_platform_x11=true
+ozone_platform="x11"
+# Disabling remoting because it needs wayland
+enable_remoting=false
+# Changing logos on chromium branding is much easier than creating a custom branding
