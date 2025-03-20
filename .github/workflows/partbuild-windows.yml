@@ -21,18 +21,7 @@ jobs:
       - name: Setup src dir
         run: |
           mkdir -p $SRCDIR && cd $SRCDIR
-          cat > .gclient <<EOF
-          solutions = [
-            {
-              "name": "src",
-              "url": "https://chromium.googlesource.com/chromium/src.git@$VERSION",
-              "managed": False,
-              "custom_deps": {},
-              "custom_vars": {},
-            },
-          ]
-          target_os = ["linux"]
-          EOF
+          curl -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient
 
       - name: Clone depot_tools
         shell: bash
