@@ -52,7 +52,6 @@ jobs:
           cd out/Release
           curl.exe -o args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/windows-args.gn
           cd ../..
-          sudo apt install -y ninja-build gperf
           gn gen out/Release
           rm -rf .git
 
