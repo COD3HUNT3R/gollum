@@ -87,7 +87,8 @@ jobs:
           src/build/util/lastchange.py -m SKIA_COMMIT_HASH -s src/third_party/skia --header src/skia/ext/skia_commit_hash.h
           src/build/util/lastchange.py -s src/third_party/dawn --revision src/gpu/webgpu/DAWN_VERSION
           cd src && mkdir -p out/Release
-          cd out/Release && wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/args.gn
+          cd out/Release
+          wget -O args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/linux-args.gn
           cd ../..
           sudo apt install -y ninja-build gperf
           gn gen out/Release
