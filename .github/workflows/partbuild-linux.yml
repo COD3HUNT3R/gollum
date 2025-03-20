@@ -165,6 +165,7 @@ jobs:
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
           pwd && ls -lsh
+          sudo build/install-build-deps.sh
           mkdir -p out/release && cd out/release
           wget -O args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/linux-args.gn
           cd ../..
