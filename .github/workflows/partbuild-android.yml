@@ -1,4 +1,4 @@
-name: partbuild
+name: partbuild-android
 
 # Controls when the workflow will run
 on:
