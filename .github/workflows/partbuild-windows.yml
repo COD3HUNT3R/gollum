@@ -9,7 +9,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build1:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       VERSION: 134.0.6998.118
       SRCDIR: chromium-src
@@ -126,7 +126,7 @@ jobs:
 
   build2:
     needs: build1
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       VERSION: 134.0.6998.118
       SRCDIR: chromium-src
@@ -228,7 +228,7 @@ jobs:
 
   build3:
       needs: build2
-      runs-on: ubuntu-latest
+      runs-on: windows-latest
       env:
         VERSION: 134.0.6998.118
         SRCDIR: chromium-src
