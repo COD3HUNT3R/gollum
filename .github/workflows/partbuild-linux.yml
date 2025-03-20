@@ -168,7 +168,7 @@ jobs:
           mkdir -p out/release && cd out/release
           wget -O args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/linux-args.gn
           cd ../..
-          gn gen out/release
+          gn args out/release --list
 
       - name: Build base
         shell: bash
