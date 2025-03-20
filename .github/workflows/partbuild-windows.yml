@@ -1,9 +1,4 @@
-# wayland html select menubar bug. Disable wayland for now
-ozone_auto_platforms=false
-ozone_platform_x11=true
-ozone_platform="x11"
-# Disabling remoting because it needs wayland
-enable_remoting=falsename: partbuild-windows
+name: partbuild-windows
 
 # Controls when the workflow will run
 on:
