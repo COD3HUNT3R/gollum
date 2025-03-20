@@ -31,6 +31,7 @@ jobs:
         run: |
           cd ${{ env.SRCDIR }}
           cat .gclient
+          git config --global depot-tools.allowGlobalGitConfig true
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
@@ -109,6 +110,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         run: |
           cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
@@ -184,6 +186,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         run: |
           cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
