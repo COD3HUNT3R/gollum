@@ -50,7 +50,7 @@ jobs:
           src/build/util/lastchange.py -s src/third_party/dawn --revision src/gpu/webgpu/DAWN_VERSION
           cd src && mkdir -p out/Release
           cd out/Release
-          wget -O args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/linux-args.gn
+          curl.exe -o args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/windows-args.gn
           cd ../..
           sudo apt install -y ninja-build gperf
           gn gen out/Release
