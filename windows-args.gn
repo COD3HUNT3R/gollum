@@ -20,5 +20,4 @@ treat_warnings_as_errors=false
 optimize_webui=true
 ffmpeg_branding="Chrome"
 proprietary_codecs=true
-use_vaapi=true
 # Changing logos on chromium branding is much easier than creating a custom branding
