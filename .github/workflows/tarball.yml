@@ -267,4 +267,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-src-${{ env.VERSION }}
-          path: /d/a/gollum/gollum/chromium-src/*.tar.xz
+          path: ${{ github.workspace }}\chromium-src\*.tar.xz
