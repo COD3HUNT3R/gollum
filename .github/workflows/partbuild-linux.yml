@@ -100,7 +100,7 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
 
-  build1:
+  linuxbuild1:
     needs: linux
     runs-on: ubuntu-latest
     env:
@@ -192,8 +192,8 @@ jobs:
           name: chromium-out
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
 
-  build2:
-      needs: build1
+  linuxbuild2:
+      needs: linuxbuild1
       runs-on: ubuntu-latest
       env:
         VERSION: 134.0.6998.165
@@ -303,8 +303,8 @@ jobs:
           name: chromium-out
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
 
-  build3:
-      needs: build2
+  linuxbuild3:
+      needs: linuxbuild2
       runs-on: ubuntu-latest
       env:
         VERSION: 134.0.6998.165
