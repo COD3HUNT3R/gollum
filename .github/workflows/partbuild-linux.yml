@@ -286,11 +286,6 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/release chrome/browser/ui
 
-      - name: Delete existing artifact to prevent conflicts
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: chromium-out
-
       - name: Compress artifacts
         shell: bash
         run: |
@@ -302,6 +297,7 @@ jobs:
         with:
           name: chromium-out
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
+          overwrite: true
 
   linuxbuild3:
       needs: linuxbuild2
