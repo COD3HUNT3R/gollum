@@ -181,18 +181,6 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/release content/public/common
 
-      - name: Build content/public/browser
-        shell: bash
-        run: |
-          cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release content/public/browser
-
-      - name: Build chrome/gpu
-        shell: bash
-        run: |
-          cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release chrome/gpu
-
       - name: Compress artifacts
         shell: bash
         run: |
@@ -247,6 +235,12 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-out
+          path: /home/runner/work/gollum/gollum/chromium-src
+
       - name: Clone depot_tools
         shell: bash
         env:
@@ -269,11 +263,17 @@ jobs:
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
 
-      - name: Build chrome_java
+      - name: Build content/public/browser
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release chrome_java
+          autoninja -C out/release content/public/browser
+
+      - name: Build chrome/gpu
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          autoninja -C out/release chrome/gpu
 
       - name: Build chrome/common
         shell: bash
