@@ -82,6 +82,11 @@ jobs:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
 
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' 
+
       - name: Clone depot_tools
         shell: bash
         env:
