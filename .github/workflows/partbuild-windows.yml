@@ -94,8 +94,12 @@ jobs:
 
       - name: Extract tar
         shell: bash
+        continue-on-error: true
         run: |
           cd ${{ env.SRCDIR }} && ls -lsh
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.xz
           tar -xf chromium-$VERSION.tar.xz
           ls -lsh
           rm -f chromium-$VERSION.tar.xz
