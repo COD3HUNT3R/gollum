@@ -11,7 +11,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.117
+      VERSION: 134.0.6998.165
       SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -104,7 +104,7 @@ jobs:
     needs: linux
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.117
+      VERSION: 134.0.6998.165
       SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -196,7 +196,7 @@ jobs:
       needs: build1
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.117
+        VERSION: 134.0.6998.165
         SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
@@ -307,7 +307,7 @@ jobs:
       needs: build2
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.117
+        VERSION: 134.0.6998.165
         SRCDIR: chromium-src
     # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
@@ -393,4 +393,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: packages
-          path: /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/Release/*.rpm
+          path: |
+            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/Release/*.rpm
+            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/Release/*.deb
