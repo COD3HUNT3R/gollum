@@ -16,11 +16,14 @@ jobs:
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' 
 
       - name: Setup src dir
         run: |
+          ls C:\hostedtoolcache\windows\Python\3.12.9\x64
           mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
           curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient
           ls
