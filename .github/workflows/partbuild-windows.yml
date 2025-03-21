@@ -11,19 +11,13 @@ jobs:
     # The type of runner that the job will run on
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.118
+      VERSION: 134.0.6998.166
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12' 
-
       - name: Setup src dir
         run: |
-          ls C:\hostedtoolcache\windows\Python\3.12.9\x64
           mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
           curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient
           ls
@@ -73,7 +67,7 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.118
+      VERSION: 134.0.6998.166
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -100,14 +94,13 @@ jobs:
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+          echo "::add-path::C:/hostedtoolcache/windows/Python/3.12.9/x64"
 
       - name: Extract tar
         shell: bash
         continue-on-error: true
         run: |
           cd ${{ env.SRCDIR }} && ls -lsh
-          tar -xf chromium-$VERSION.tar.xz
-          tar -xf chromium-$VERSION.tar.xz
           tar -xf chromium-$VERSION.tar.xz
           tar -xf chromium-$VERSION.tar.xz
           ls -lsh
@@ -147,9 +140,10 @@ jobs:
       needs: build1
       runs-on: windows-latest
       env:
-        VERSION: 134.0.6998.118
+        VERSION: 134.0.6998.166
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+        MSYS: winsymlinks:native
     # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
       - name: Download artifact
