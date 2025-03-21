@@ -174,13 +174,13 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release content/public/browser
+          autoninja -C out/release content/public/browser
 
       - name: Build chrome/gpu
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release chrome/gpu
+          autoninja -C out/release chrome/gpu
 
       - name: Compress artifacts
         shell: bash
@@ -268,29 +268,29 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release chrome_java
+          autoninja -C out/release chrome_java
 
       - name: Build chrome/common
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release chrome/common
+          autoninja -C out/release chrome/common
 
       - name: Build chrome/browser
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release chrome/browser
+          autoninja -C out/release chrome/browser
 
       - name: Build apk
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/Release chrome_public_apk
-          ls -lsh out/Release/apks
+          autoninja -C out/release chrome_public_apk
+          ls -lsh out/release/apks
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: apks
-          path: /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/Release/apks
+          path: /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/release/apks
