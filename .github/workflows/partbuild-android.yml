@@ -236,6 +236,12 @@ jobs:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-out
+          path: /home/runner/work/gollum/gollum/chromium-src
+
       - name: Clone depot_tools
         shell: bash
         env:
