@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: windows-src-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src
+          path: ${{ github.workspace }}\chromium-src
 
       - name: Clone depot_tools
         shell: bash
