@@ -8,18 +8,16 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   windows:
-    # The type of runner that the job will run on
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.166
+      VERSION: 135.0.7049.41
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Setup src dir
         run: |
           mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
-          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient
+          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient-win
           ls
 
       - name: Clone depot_tools
@@ -67,11 +65,10 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.166
+      VERSION: 135.0.7049.41
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -82,7 +79,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12' 
+          python-version: '3.12'
 
       - name: Clone depot_tools
         shell: bash
@@ -111,23 +108,23 @@ jobs:
           cd ../.. && pwd && ls -lsh
           gn gen out/release
 
-      - name: Build content/public/browser
+      - name: Build base
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          autoninja -C out/release content/public/browser
+          ninja -j 4 -C out/release base
 
-      - name: Build chrome/gpu
+      - name: Build content/public/common
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          autoninja -C out/release chrome/gpu
+          ninja -j 4 -C out/release content/public/common
 
       - name: Compress artifacts
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ZSTD_CLEVEL=12 tar -I zstd -cvpf ${{ github.workspace }}/chromium-src/out.tar.zst ./out
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -139,11 +136,10 @@ jobs:
       needs: build1
       runs-on: windows-latest
       env:
-        VERSION: 134.0.6998.166
+        VERSION: 135.0.7049.41
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
-    # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -179,32 +175,54 @@ jobs:
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
 
-      - name: Build chrome_java
+      - name: Build content/public/browser
         shell: bash
         run: |
-          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          autoninja -C out/release chrome_java
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ninja -j 4 -C out/release content/public/browser
+
+      - name: Build chrome/gpu
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ninja -j 4 -C out/release chrome/gpu
 
       - name: Build chrome/common
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          autoninja -C out/release chrome/common
+          ninja -j 4 -C out/release chrome/common
 
       - name: Build chrome/browser
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          autoninja -C out/release chrome/browser
+          ninja -j 4 -C out/release chrome/browser
 
       - name: Build chrome
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          autoninja -C out/release chrome
-          autoninja -C out/release chrome_sandbox
-          autoninja -C out/release chromedriver
-          autoninja -C out/release installer
+          ninja -j 4 -C out/release chrome
+
+      - name: Build chrome_sandbox
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          ninja -j 4 -C out/release chrome_sandbox
+
+      - name: Build chromedriver
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          ninja -j 4 -C out/release chromedriver
+
+      - name: Build installer & mini_installer
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          ninja -j 4 -C out/release installer
+          ninja -j 4 -C out/release mini_installer
           ls out/release
 
       - name: Upload artifacts
