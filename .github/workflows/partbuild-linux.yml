@@ -280,12 +280,6 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           autoninja -C out/release chrome/common
 
-      - name: Build chrome/browser/ui
-        shell: bash
-        run: |
-          cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release chrome/browser/ui
-
       - name: Compress artifacts
         shell: bash
         run: |
@@ -368,6 +362,12 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
+
+      - name: Build chrome/browser/ui
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          autoninja -C out/release chrome/browser/ui
 
       - name: Build chrome/browser
         shell: bash
