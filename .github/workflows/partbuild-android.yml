@@ -359,6 +359,12 @@ jobs:
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
 
+      - name: Build chrome/browser:resources
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          autoninja -C out/release chrome/browser:resources
+
       - name: Build chrome/browser/ui
         shell: bash
         run: |
