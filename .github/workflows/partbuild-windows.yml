@@ -109,17 +109,17 @@ jobs:
           cd ../.. && pwd && ls -lsh
           gn gen out/release
 
-      - name: Build content/public/browser
+      - name: Build base
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ninja -j 4 -C out/release content/public/browser
+          ninja -j 4 -C out/release base
 
-      - name: Build chrome/gpu
+      - name: Build content/public/common
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ninja -j 4 -C out/release chrome/gpu
+          ninja -j 4 -C out/release content/public/common
 
       - name: Compress artifacts
         shell: bash
@@ -175,6 +175,18 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
+
+      - name: Build content/public/browser
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ninja -j 4 -C out/release content/public/browser
+
+      - name: Build chrome/gpu
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ninja -j 4 -C out/release chrome/gpu
 
       - name: Build chrome/common
         shell: bash
