@@ -176,7 +176,7 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release content/public/common
+          ninja -j 4 -C out/release content/public/common
 
       - name: Compress artifacts
         shell: bash
@@ -264,19 +264,19 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release content/public/browser
+          ninja -j 4 -C out/release content/public/browser
 
       - name: Build chrome/gpu
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release chrome/gpu
+          ninja -j 4 -C out/release chrome/gpu
 
       - name: Build chrome/common
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release chrome/common
+          ninja -j 4 -C out/release chrome/common
 
       - name: Compress artifacts
         shell: bash
@@ -366,7 +366,7 @@ jobs:
         continue-on-error: true
         run: |
           cd $SRCDIR/chromium-$VERSION
-          timeout 5h autoninja -C out/release chrome/browser/ui
+          timeout 5h ninja -j 4 -C out/release chrome/browser/ui
 
       - name: Compress artifacts
         shell: bash
@@ -455,13 +455,13 @@ jobs:
         continue-on-error: true
         run: |
           cd $SRCDIR/chromium-$VERSION
-          timeout 5h autoninja -C out/release chrome/browser/ui
+          timeout 5h ninja -j 4 -C out/release chrome/browser/ui
 
       - name: Build chrome/browser
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release chrome/browser
+          ninja -j 4 -C out/release chrome/browser
 
       - name: Compress artifacts
         shell: bash
@@ -482,7 +482,6 @@ jobs:
       env:
         VERSION: 134.0.6998.165
         SRCDIR: chromium-src
-    # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -550,10 +549,10 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release chrome
-          autoninja -C out/release chrome_sandbox
-          autoninja -C out/release chromedriver
-          autoninja -C out/release installer
+          ninja -j 4 -C out/release chrome
+          ninja -j 4 -C out/release chrome_sandbox
+          ninja -j 4 -C out/release chromedriver
+          ninja -j 4 -C out/release installer
           ls -lsh out/release
 
       - name: Upload artifacts
