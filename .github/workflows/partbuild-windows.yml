@@ -14,7 +14,6 @@ jobs:
       VERSION: 134.0.6998.178
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Setup src dir
         run: |
@@ -71,7 +70,6 @@ jobs:
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -121,7 +119,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          autoninja -C out/release chrome/gpu
+          ninja -j 4 -C out/release chrome/gpu
 
       - name: Compress artifacts
         shell: bash
@@ -143,7 +141,6 @@ jobs:
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
-    # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -183,22 +180,23 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          autoninja -C out/release chrome/common
+          ninja -j 4 -C out/release chrome/common
 
       - name: Build chrome/browser
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          autoninja -C out/release chrome/browser
+          ninja -j 4 -C out/release chrome/browser
 
       - name: Build chrome
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          autoninja -C out/release chrome
-          autoninja -C out/release chrome_sandbox
-          autoninja -C out/release chromedriver
-          autoninja -C out/release installer
+          ninja -j 4 -C out/release chrome
+          ninja -j 4 -C out/release chrome_sandbox
+          ninja -j 4 -C out/release chromedriver
+          ninja -j 4 -C out/release installer
+          ninja -j 4 -C out/release mini_installer
           ls out/release
 
       - name: Upload artifacts
