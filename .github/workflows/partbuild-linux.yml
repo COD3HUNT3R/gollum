@@ -149,7 +149,7 @@ jobs:
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
-          sudo apt install -y ninja-build gperf python3
+          sudo apt install -y ninja-build gperf
 
       - name: Extract tar
         shell: bash
@@ -170,7 +170,7 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          autoninja -C out/release base
+          ninja -j 4 -C out/release base
 
       - name: Build content/public/common
         shell: bash
