@@ -66,8 +66,6 @@ jobs:
           cat .gclient
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
-          which timeout
-          
 
       - name: Adding depot_tools to path
         env:
@@ -107,7 +105,6 @@ jobs:
     env:
       VERSION: 134.0.6998.165
       SRCDIR: chromium-src
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -152,7 +149,7 @@ jobs:
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
-          sudo apt install -y ninja-build gperf
+          sudo apt install -y ninja-build gperf python3
 
       - name: Extract tar
         shell: bash
