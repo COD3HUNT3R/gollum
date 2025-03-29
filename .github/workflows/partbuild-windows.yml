@@ -115,7 +115,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          autoninja -C out/release content/public/browser
+          ninja -j 4 -C out/release content/public/browser
 
       - name: Build chrome/gpu
         shell: bash
