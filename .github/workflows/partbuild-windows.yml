@@ -11,7 +11,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.178
+      VERSION: 135.0.7049.41
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
     steps:
@@ -66,7 +66,7 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.178
+      VERSION: 135.0.7049.41
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -137,7 +137,7 @@ jobs:
       needs: build1
       runs-on: windows-latest
       env:
-        VERSION: 134.0.6998.178
+        VERSION: 135.0.7049.41
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
