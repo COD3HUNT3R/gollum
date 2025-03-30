@@ -169,6 +169,7 @@ jobs:
 
       - name: Build content/public/browser
         shell: bash
+        continue-on-error: true
         run: |
           cd $SRCDIR/chromium-$VERSION
           timeout 5h ninja -j 4 -C out/release content/public/browser
@@ -253,6 +254,13 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
+
+      - name: Build content/public/browser
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          timeout 5h ninja -j 4 -C out/release content/public/browser
 
       - name: Build chrome/gpu
         shell: bash
