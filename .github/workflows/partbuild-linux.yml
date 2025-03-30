@@ -258,6 +258,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          sudo build/install-build-deps.sh
           pwd && ls -lsh
 
       - name: Build content/public/browser
@@ -359,6 +360,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          sudo build/install-build-deps.sh
           pwd && ls -lsh
 
       - name: Build chrome/browser/ui
@@ -448,6 +450,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          sudo build/install-build-deps.sh
           pwd && ls -lsh
 
       - name: Build chrome/browser/ui
@@ -532,7 +535,7 @@ jobs:
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
-          sudo apt install -y ninja-build gperf
+          sudo apt install -y ninja-build gperf devscripts
 
       - name: Extract tar
         shell: bash
@@ -543,6 +546,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          sudo build/install-build-deps.sh
           pwd && ls -lsh
 
       - name: Build chrome
@@ -550,8 +554,23 @@ jobs:
         run: |
           cd $SRCDIR/chromium-$VERSION
           ninja -j 4 -C out/release chrome
+
+      - name: Build chrome_sandbox
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
           ninja -j 4 -C out/release chrome_sandbox
+
+      - name: Build chromedriver
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
           ninja -j 4 -C out/release chromedriver
+
+      - name: Build installer
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
           ninja -j 4 -C out/release installer
           ls -lsh out/release
 
