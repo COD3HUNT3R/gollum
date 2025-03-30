@@ -1,4 +1,4 @@
-name: partbuild-android
+mini_installname: partbuild-android
 
 # Controls when the workflow will run
 on:
@@ -171,7 +171,7 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR/chromium-$VERSION
-          ninja -j 4 -C out/release content/public/browser
+          timeout 5h ninja -j 4 -C out/release content/public/browser
 
       - name: Compress artifacts
         shell: bash
