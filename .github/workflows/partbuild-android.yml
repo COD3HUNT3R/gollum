@@ -11,7 +11,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.135
+      VERSION: 135.0.7049.38
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -67,7 +67,6 @@ jobs:
           cat .gclient
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
-          
 
       - name: Adding depot_tools to path
         env:
@@ -105,7 +104,7 @@ jobs:
     needs: android
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.135
+      VERSION: 135.0.7049.38
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -190,7 +189,7 @@ jobs:
       needs: build1
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.135
+        VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -290,7 +289,7 @@ jobs:
       needs: build2
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.135
+        VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -384,7 +383,7 @@ jobs:
       needs: build3
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.135
+        VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -472,7 +471,7 @@ jobs:
       needs: build4
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.135
+        VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
