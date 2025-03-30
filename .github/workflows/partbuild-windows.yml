@@ -79,7 +79,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12' 
+          python-version: '3.12'
 
       - name: Clone depot_tools
         shell: bash
@@ -124,7 +124,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ZSTD_CLEVEL=12 tar -I zstd -cvpf ${{ github.workspace }}/chromium-src/out.tar.zst out
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -204,8 +204,23 @@ jobs:
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chrome
+
+      - name: Build chrome_sandbox
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chrome_sandbox
+
+      - name: Build chromedriver
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chromedriver
+
+      - name: Build installer & mini_installer
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release installer
           ninja -j 4 -C out/release mini_installer
           ls out/release
