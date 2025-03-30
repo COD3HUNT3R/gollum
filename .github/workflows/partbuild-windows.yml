@@ -8,7 +8,6 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   windows:
-    # The type of runner that the job will run on
     runs-on: windows-latest
     env:
       VERSION: 135.0.7049.41
@@ -18,7 +17,7 @@ jobs:
       - name: Setup src dir
         run: |
           mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
-          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient
+          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient-win
           ls
 
       - name: Clone depot_tools
@@ -125,7 +124,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ZSTD_CLEVEL=12 tar -I zstd -cvpf ${{ github.workspace }}/chromium-src/out.tar.zst ./out
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf ${{ github.workspace }}/chromium-src/out.tar.zst out
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
