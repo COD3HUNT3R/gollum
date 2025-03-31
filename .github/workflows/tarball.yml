@@ -211,13 +211,11 @@ jobs:
 
 
   windows:
-    # The type of runner that the job will run on
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.166
+      VERSION: 134.0.6998.178
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout
         uses: actions/checkout@v4
