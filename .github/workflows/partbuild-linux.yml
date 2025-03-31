@@ -8,12 +8,11 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   linux:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.165
+      VMAJOR: 135
+      VERSION: 135.0.7049.52
       SRCDIR: chromium-src
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -90,20 +89,46 @@ jobs:
           wget https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/export_tarball.py
           chmod +x export_tarball.py
           ./export_tarball.py --version --xz --remove-nonessential-files chromium-$VERSION --progress --src-dir src/
-          ls -lsh
-          pwd
+          ls -lsh && pwd
 
-      - name: Upload artifact
+      - name: Upload source tarball
         uses: actions/upload-artifact@v4
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
 
+      - name: Generate patches
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd $SRCDIR
+          mv *.tar.xz .. && cd ..
+          rm -rf $SRCDIR
+          ls -lsh && pwd
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION a
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION b
+          rm -f chromium-$VERSION.tar.xz
+          cd b
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          cd ..
+          ls -lsh && pwd
+          diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
+          ls -lsh && pwd
+
+      - name: Upload patches
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/*.patch
+
   linuxbuild1:
     needs: linux
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.165
+      VMAJOR: 135
+      VERSION: 135.0.7049.52
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -134,18 +159,30 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/desktop'
+          path: 'chromium-src/desktop'
+          token: ${{ secrets.PAT }}
 
       - name: Clone depot_tools
         shell: bash
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         run: |
-          cd $SRCDIR
+          cd $SRCDIR && ls -lsh
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
@@ -154,12 +191,15 @@ jobs:
       - name: Extract tar
         shell: bash
         run: |
-          cd $SRCDIR && ls -lsh
+          cd $SRCDIR && ls -lsh linux
           tar -xf chromium-$VERSION.tar.xz
           ls -lsh
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
-          pwd && ls -lsh
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
+          cp -r ../linux/chrome .
+          pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           mkdir -p out/release && cd out/release
           wget -O args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/linux-args.gn
@@ -184,19 +224,19 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
 
   linuxbuild2:
       needs: linuxbuild1
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.165
+        VMAJOR: 135
+        VERSION: 135.0.7049.52
         SRCDIR: chromium-src
-    # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -226,17 +266,29 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download artifact
+      - name: Download out directory
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/desktop'
+          path: 'chromium-src/desktop'
+          token: ${{ secrets.PAT }}
 
       - name: Clone depot_tools
         shell: bash
@@ -258,6 +310,10 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
+          cp -r ../linux/chrome .
+          pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
@@ -285,10 +341,10 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
           overwrite: true
 
@@ -296,9 +352,9 @@ jobs:
       needs: linuxbuild2
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.165
+        VMAJOR: 135
+        VERSION: 135.0.7049.52
         SRCDIR: chromium-src
-    # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -328,17 +384,29 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download artifact
+      - name: Download out directory
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/desktop'
+          path: 'chromium-src/desktop'
+          token: ${{ secrets.PAT }}
 
       - name: Clone depot_tools
         shell: bash
@@ -360,6 +428,10 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
+          cp -r ../linux/chrome .
+          pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
@@ -376,10 +448,10 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
           overwrite: true
 
@@ -387,7 +459,8 @@ jobs:
       needs: linuxbuild3
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.165
+        VMAJOR: 135
+        VERSION: 135.0.7049.52
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -418,17 +491,29 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download artifact
+      - name: Download out directory
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/desktop'
+          path: 'chromium-src/desktop'
+          token: ${{ secrets.PAT }}
 
       - name: Clone depot_tools
         shell: bash
@@ -450,6 +535,10 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
+          cp -r ../linux/chrome .
+          pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
@@ -472,10 +561,10 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
           overwrite: true
 
@@ -483,7 +572,8 @@ jobs:
       needs: linuxbuild4
       runs-on: ubuntu-latest
       env:
-        VERSION: 134.0.6998.165
+        VMAJOR: 135
+        VERSION: 135.0.7049.52
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -514,17 +604,29 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download artifact
+      - name: Download out directory
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/desktop'
+          path: 'chromium-src/desktop'
+          token: ${{ secrets.PAT }}
 
       - name: Clone depot_tools
         shell: bash
@@ -546,6 +648,10 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
+          cp -r ../linux/chrome .
+          pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
@@ -574,10 +680,27 @@ jobs:
           ninja -j 4 -C out/release installer
           ls -lsh out/release
 
-      - name: Upload artifacts
+      - name: Upload DEB packages
         uses: actions/upload-artifact@v4
         with:
-          name: packages
-          path: |
-            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/release/*.rpm
-            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/release/*.deb
+          name: packages-linux-deb-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/chromium-${{ env.VERSION }}/out/release/*.deb
+
+      - name: Upload RPM packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages-linux-rpm-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/chromium-${{ env.VERSION }}/out/release/*.rpm
+
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
+          overwrite: true

@@ -10,7 +10,7 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      VERSION: 135.0.7049.41
+      VERSION: 135.0.7049.42
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
     steps:
@@ -65,21 +65,16 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VERSION: 135.0.7049.41
+      VERSION: 135.0.7049.42
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
     steps:
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
-
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
 
       - name: Clone depot_tools
         shell: bash
@@ -91,7 +86,6 @@ jobs:
           echo "Clone depot_tools..."
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
           echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
-          echo "::add-path::C:/hostedtoolcache/windows/Python/3.12.9/x64"
 
       - name: Extract tar
         shell: bash
@@ -124,34 +118,34 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ZSTD_CLEVEL=12 tar -I zstd -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
+          ZSTD_CLEVEL=12 tar -I zstd --force-local -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src\out.tar.zst
 
   build2:
       needs: build1
       runs-on: windows-latest
       env:
-        VERSION: 135.0.7049.41
+        VERSION: 135.0.7049.42
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
       steps:
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: windows-src-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src
+          path: ${{ github.workspace }}\chromium-src
 
-      - name: Download artifact
+      - name: Download out directory
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
-          path: /home/runner/work/gollum/gollum/chromium-src
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
 
       - name: Clone depot_tools
         shell: bash
@@ -178,13 +172,13 @@ jobs:
       - name: Build content/public/browser
         shell: bash
         run: |
-          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release content/public/browser
 
       - name: Build chrome/gpu
         shell: bash
         run: |
-          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chrome/gpu
 
       - name: Build chrome/common
@@ -193,11 +187,186 @@ jobs:
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chrome/common
 
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd --force-local -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src\out.tar.zst
+          overwrite: true
+
+  build3:
+      needs: build2
+      runs-on: windows-latest
+      env:
+        VERSION: 135.0.7049.42
+        SRCDIR: chromium-src
+        DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+        MSYS: winsymlinks:native
+      steps:
+      - name: Download source tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-src-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Download out directory
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Clone depot_tools
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+          echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+
+      - name: Extract tar
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }} && ls
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf out.tar.zst
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          mv out chromium-$VERSION && cd chromium-$VERSION
+          pwd && ls -lsh
+
+      - name: Build chrome/browser/ui
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          timeout 5h ninja -j 4 -C out/release chrome/browser/ui
+
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd --force-local -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src\out.tar.zst
+          overwrite: true
+
+  build4:
+      needs: build3
+      runs-on: windows-latest
+      env:
+        VERSION: 135.0.7049.42
+        SRCDIR: chromium-src
+        DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+        MSYS: winsymlinks:native
+      steps:
+      - name: Download source tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-src-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Download out directory
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Clone depot_tools
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+          echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+
+      - name: Extract tar
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }} && ls
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf out.tar.zst
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          mv out chromium-$VERSION && cd chromium-$VERSION
+          pwd && ls -lsh
+
       - name: Build chrome/browser
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chrome/browser
+
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd --force-local -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src\out.tar.zst
+          overwrite: true
+
+  build5:
+      needs: build4
+      runs-on: windows-latest
+      env:
+        VERSION: 135.0.7049.42
+        SRCDIR: chromium-src
+        DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+        MSYS: winsymlinks:native
+      steps:
+      - name: Download source tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-src-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Download out directory
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Clone depot_tools
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+          echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+
+      - name: Extract tar
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }} && ls
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf out.tar.zst
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          mv out chromium-$VERSION && cd chromium-$VERSION
+          pwd && ls -lsh
 
       - name: Build chrome
         shell: bash
@@ -225,8 +394,21 @@ jobs:
           ninja -j 4 -C out/release mini_installer
           ls out/release
 
-      - name: Upload artifacts
+      - name: Upload windows packages
         uses: actions/upload-artifact@v4
         with:
-          name: packages
-          path: ${{ github.workspace }}\chromium-src\chromium-$VERSION\out\release\*.exe
+          name: packages-windows-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src\chromium-${{ env.VERSION }}\out\release\*.exe
+
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd --force-local -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src\out.tar.zst
+          overwrite: true

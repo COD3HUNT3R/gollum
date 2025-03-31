@@ -15,12 +15,10 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   android:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
       VERSION: 134.0.6998.135
       SRCDIR: chromium-src
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -35,9 +33,6 @@ jobs:
         run: |
           sudo swapoff -av
           sudo rm -f /swapfile
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: "remove not needed items"
         run: |
@@ -114,12 +109,10 @@ jobs:
 
 
   linux:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.165
+      VERSION: 135.0.7049.52
       SRCDIR: chromium-src
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -134,9 +127,6 @@ jobs:
         run: |
           sudo swapoff -av
           sudo rm -f /swapfile
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: "remove not needed items"
         run: |
@@ -213,17 +203,14 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      VERSION: 134.0.6998.178
+      VERSION: 135.0.7049.42
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Setup src dir
         run: |
           mkdir -p ${{ env.SRCDIR }} && cd ${{ env.SRCDIR }}
-          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient
+          curl.exe -o .gclient https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/.gclient-win
           ls
 
       - name: Clone depot_tools

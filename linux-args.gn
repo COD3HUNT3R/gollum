@@ -29,3 +29,6 @@ ozone_platform="x11"
 # Disabling remoting because it needs wayland
 enable_remoting=false
 # Changing logos on chromium branding is much easier than creating a custom branding
+google_api_key="%api-key%"
+google_default_client_id="%client-id%"
+google_default_client_secret="%client-secret%"

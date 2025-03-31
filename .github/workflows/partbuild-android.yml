@@ -10,6 +10,7 @@ jobs:
   android:
     runs-on: ubuntu-latest
     env:
+      VMAJOR: 135
       VERSION: 135.0.7049.38
       SRCDIR: chromium-src
     steps:
@@ -93,16 +94,43 @@ jobs:
           ls -lsh
           pwd
 
-      - name: Upload artifact
+      - name: Upload source tarball
         uses: actions/upload-artifact@v4
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
 
+      - name: Generate patches
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd $SRCDIR
+          mv *.tar.xz .. && cd ..
+          rm -rf $SRCDIR
+          ls -lsh && pwd
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION a
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION b
+          rm -f chromium-$VERSION.tar.xz
+          cd b
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
+          cd ..
+          diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
+          ls -lsh && pwd
+
+      - name: Upload patches
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/*.patch
+
   build1:
     needs: android
     runs-on: ubuntu-latest
     env:
+      VMAJOR: 135
       VERSION: 135.0.7049.38
       SRCDIR: chromium-src
     steps:
@@ -134,10 +162,16 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: android-src-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Clone depot_tools
@@ -159,6 +193,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
           pwd && ls -lsh
           sudo build/install-build-deps.sh
           mkdir -p out/release && cd out/release
@@ -179,16 +214,17 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
 
   build2:
       needs: build1
       runs-on: ubuntu-latest
       env:
+        VMAJOR: 135
         VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
@@ -220,7 +256,7 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: android-src-${{ env.VERSION }}
@@ -229,7 +265,13 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Clone depot_tools
@@ -252,6 +294,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
           pwd && ls -lsh
 
       - name: Build content/public/browser
@@ -285,10 +328,10 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
           overwrite: true
 
@@ -296,6 +339,7 @@ jobs:
       needs: build2
       runs-on: ubuntu-latest
       env:
+        VMAJOR: 135
         VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
@@ -327,7 +371,7 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: android-src-${{ env.VERSION }}
@@ -336,7 +380,13 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Clone depot_tools
@@ -359,6 +409,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
           pwd && ls -lsh
 
       - name: Build chrome/browser/ui
@@ -380,10 +431,10 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
           overwrite: true
 
@@ -391,6 +442,7 @@ jobs:
       needs: build3
       runs-on: ubuntu-latest
       env:
+        VMAJOR: 135
         VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
@@ -422,7 +474,7 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: android-src-${{ env.VERSION }}
@@ -431,7 +483,13 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Clone depot_tools
@@ -454,6 +512,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
           pwd && ls -lsh
 
       - name: Build chrome/browser
@@ -468,10 +527,10 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
-      - name: Upload artifacts
+      - name: Upload out directory
         uses: actions/upload-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
           overwrite: true
 
@@ -479,6 +538,7 @@ jobs:
       needs: build4
       runs-on: ubuntu-latest
       env:
+        VMAJOR: 135
         VERSION: 135.0.7049.38
         SRCDIR: chromium-src
       steps:
@@ -510,7 +570,7 @@ jobs:
           sudo docker image prune --all --force
           sudo docker builder prune -a
 
-      - name: Download artifact
+      - name: Download source tarball
         uses: actions/download-artifact@v4
         with:
           name: android-src-${{ env.VERSION }}
@@ -519,7 +579,13 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: chromium-out
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Clone depot_tools
@@ -542,6 +608,104 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          pwd && ls -lsh
+
+      - name: Build apk
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          timeout 5h ninja -j 4 -C out/release chrome_public_apk
+
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
+          overwrite: true
+
+  build6:
+      needs: build5
+      runs-on: ubuntu-latest
+      env:
+        VMAJOR: 135
+        VERSION: 135.0.7049.38
+        SRCDIR: chromium-src
+      steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
+      - name: Reclaiming disk space on / by disabling swap partition
+        run: |
+          sudo swapoff -av
+          sudo rm -f /swapfile
+
+      - name: "remove not needed items"
+        run: |
+          sudo rm -rf /usr/local/.ghcup \
+            /usr/share/dotnet \
+            /usr/share/swift \
+            /usr/local/share/powershell \
+            /usr/local/lib/android \
+            /opt/ghc \
+            /opt/hostedtoolcache/CodeQL \
+            /imagegeneration \
+            "$AGENT_TOOLSDIRECTORY"
+          sudo docker image prune --all --force
+          sudo docker builder prune -a
+
+      - name: Download source tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: android-src-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Download versioned branding patches
+        uses: actions/download-artifact@v4
+        with:
+          name: android-patch-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src
+
+      - name: Clone depot_tools
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          cd $SRCDIR
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+          echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+          sudo apt install -y ninja-build gperf
+
+      - name: Extract tar
+        shell: bash
+        run: |
+          cd $SRCDIR && ls -lsh
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf out.tar.zst
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          mv out chromium-$VERSION && cd chromium-$VERSION
+          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
           pwd && ls -lsh
 
       - name: Build apk
@@ -551,8 +715,21 @@ jobs:
           ninja -j 4 -C out/release chrome_public_apk
           ls -lsh out/release/apks
 
-      - name: Upload artifacts
+      - name: Upload apks
         uses: actions/upload-artifact@v4
         with:
-          name: apks
-          path: /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/release/apks
+          name: apks-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/chromium-${{ env.VERSION }}/out/release/apks
+
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
+          overwrite: true
