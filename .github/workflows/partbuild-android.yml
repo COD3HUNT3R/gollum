@@ -261,13 +261,6 @@ jobs:
           cd $SRCDIR/chromium-$VERSION
           timeout 3h ninja -j 4 -C out/release content/public/browser
 
-      - name: Build content/public/common
-        shell: bash
-        continue-on-error: true
-        run: |
-          cd $SRCDIR/chromium-$VERSION
-          timeout 3h ninja -j 4 -C out/release content/public/common
-
       - name: Build chrome/gpu
         shell: bash
         run: |
@@ -373,6 +366,13 @@ jobs:
         run: |
           cd $SRCDIR/chromium-$VERSION
           ninja -j 4 -C out/release chrome/browser/ui
+
+      - name: Build content/public/common
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd $SRCDIR/chromium-$VERSION
+          timeout 3h ninja -j 4 -C out/release content/public/common
 
       - name: Compress artifacts
         shell: bash
