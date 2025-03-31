@@ -579,5 +579,5 @@ jobs:
         with:
           name: packages
           path: |
-            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/Release/*.rpm
-            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/Release/*.deb
+            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/release/*.rpm
+            /home/runner/work/gollum/gollum/chromium-src/chromium-$VERSION/out/release/*.deb
