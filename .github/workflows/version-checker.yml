@@ -3,9 +3,9 @@ name: New version check
 on:
   # enabling manual trigger
   workflow_dispatch:
-  # At minute 0 past every 3rd hour.
+  # At minute 0 past every 8th hour.
   schedule:
-    - cron: '0 */3 * * *'
+    - cron: '0 */8 * * *'
 
 jobs:
   check:

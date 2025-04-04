@@ -206,6 +206,7 @@ jobs:
       VERSION: 135.0.7049.42
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+      MSYS: winsymlinks:native
     steps:
       - name: Setup src dir
         run: |

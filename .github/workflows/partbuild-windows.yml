@@ -13,6 +13,7 @@ jobs:
       VERSION: 135.0.7049.42
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+      MSYS: winsymlinks:native
     steps:
       - name: Setup src dir
         run: |
@@ -60,6 +61,32 @@ jobs:
         with:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src\*.tar.xz
+
+      - name: Generate patches
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd ${{ env.SRCDIR }}
+          mv *.tar.xz .. && cd ..
+          rm -rf ${{ env.SRCDIR }}
+          ls -lsh && pwd
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION a
+          tar -xf chromium-$VERSION.tar.xz
+          mv chromium-$VERSION b
+          rm -f chromium-$VERSION.tar.xz
+          cd b
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          cd ..
+          ls -lsh && pwd
+          diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
+          ls -lsh && pwd
+
+      - name: Upload windows patch
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-patch-${{ env.VERSION }}
+          path: ${{ github.workspace }}\*.patch
 
   build1:
     needs: windows
@@ -306,11 +333,12 @@ jobs:
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
 
-      - name: Build chrome/browser
+      - name: Build chrome/browser/ui
         shell: bash
+        continue-on-error: true
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          ninja -j 4 -C out/release chrome/browser
+          timeout 5h ninja -j 4 -C out/release chrome/browser/ui
 
       - name: Compress artifacts
         shell: bash
@@ -368,17 +396,17 @@ jobs:
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
 
+      - name: Build chrome/browser
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
+          ninja -j 4 -C out/release chrome/browser
+
       - name: Build chrome
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chrome
-
-      - name: Build chrome_sandbox
-        shell: bash
-        run: |
-          cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
-          ninja -j 4 -C out/release chrome_sandbox
 
       - name: Build chromedriver
         shell: bash
