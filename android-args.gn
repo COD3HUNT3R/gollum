@@ -3,7 +3,7 @@
 target_os="android"
 target_cpu="arm64"
 android_channel="stable"
-chrome_public_manifest_package="org.google.chromium"
+chrome_public_manifest_package="%android-package%"
 is_official_build=true
 is_component_build=false
 chrome_pgo_phase=0
@@ -28,3 +28,7 @@ enable_widevine=true
 treat_warnings_as_errors=false
 ffmpeg_branding="Chrome"
 proprietary_codecs=true
+# Changing logos on chromium branding is much easier than creating a custom branding
+google_api_key="%api-key%"
+google_default_client_id="%client-id%"
+google_default_client_secret="%client-secret%"

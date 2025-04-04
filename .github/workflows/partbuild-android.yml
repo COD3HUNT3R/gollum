@@ -198,6 +198,10 @@ jobs:
           sudo build/install-build-deps.sh
           mkdir -p out/release && cd out/release
           wget -O args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/android-args.gn
+          sed -i "s/%android-package%/${{ secrets.ANDROID_PACKAGE }}/g" args.gn
+          sed -i "s/%api-key%/${{ secrets.GOOGLE_API_KEY }}/g" args.gn
+          sed -i "s/%client-id%/${{ secrets.GOOGLE_CLIENT_ID }}/g" args.gn
+          sed -i "s/%client-secret%/${{ secrets.GOOGLE_CLIENT_SECRET }}/g" args.gn
           cd ../.. && pwd && ls -lsh
           gn gen out/release
 
