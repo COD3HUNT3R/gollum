@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VMAJOR: 135
-      VERSION: 135.0.7049.52
+      VERSION: 135.0.7049.95
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -112,6 +112,8 @@ jobs:
           rm -f chromium-$VERSION.tar.xz
           cd b
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
           cd ..
           ls -lsh && pwd
           diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
@@ -128,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VMAJOR: 135
-      VERSION: 135.0.7049.52
+      VERSION: 135.0.7049.95
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -205,10 +207,11 @@ jobs:
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-search-engine.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
           rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
           cp -r ../desktop/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
@@ -250,7 +253,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 135
-        VERSION: 135.0.7049.52
+        VERSION: 135.0.7049.95
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -305,6 +308,12 @@ jobs:
           path: 'chromium-src/desktop'
           token: ${{ secrets.PAT }}
 
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/patches'
+          path: 'chromium-src/patches'
+          token: ${{ secrets.PAT }}
+
       - name: Clone depot_tools
         shell: bash
         env:
@@ -326,6 +335,13 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
           rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
           cp -r ../desktop/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
@@ -368,7 +384,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 135
-        VERSION: 135.0.7049.52
+        VERSION: 135.0.7049.95
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -423,6 +439,12 @@ jobs:
           path: 'chromium-src/desktop'
           token: ${{ secrets.PAT }}
 
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/patches'
+          path: 'chromium-src/patches'
+          token: ${{ secrets.PAT }}
+
       - name: Clone depot_tools
         shell: bash
         env:
@@ -444,6 +466,13 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
           rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
           cp -r ../desktop/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
@@ -475,7 +504,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 135
-        VERSION: 135.0.7049.52
+        VERSION: 135.0.7049.95
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -530,6 +559,12 @@ jobs:
           path: 'chromium-src/desktop'
           token: ${{ secrets.PAT }}
 
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/patches'
+          path: 'chromium-src/patches'
+          token: ${{ secrets.PAT }}
+
       - name: Clone depot_tools
         shell: bash
         env:
@@ -551,6 +586,13 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
           rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
           cp -r ../desktop/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
@@ -588,7 +630,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 135
-        VERSION: 135.0.7049.52
+        VERSION: 135.0.7049.95
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -643,6 +685,12 @@ jobs:
           path: 'chromium-src/desktop'
           token: ${{ secrets.PAT }}
 
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/patches'
+          path: 'chromium-src/patches'
+          token: ${{ secrets.PAT }}
+
       - name: Clone depot_tools
         shell: bash
         env:
@@ -664,6 +712,13 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
+          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
           rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
           cp -r ../desktop/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
