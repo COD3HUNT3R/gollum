@@ -11,7 +11,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 135
-        VERSION: 135.0.7049.79
+        VERSION: 135.0.7049.111
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -48,7 +48,7 @@ jobs:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14380527948
+          run-id: 14606924225
 
       - name: Download out directory
         uses: actions/download-artifact@v4
@@ -56,7 +56,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14380527948
+          run-id: 14606924225
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v4
@@ -64,7 +64,7 @@ jobs:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14380527948
+          run-id: 14606924225
 
       - uses: actions/checkout@v4
         with:

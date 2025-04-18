@@ -1,4 +1,4 @@
-name: partbuild-windows
+name: default-windows
 
 # Controls when the workflow will run
 on:
@@ -63,33 +63,6 @@ jobs:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src\*.tar.xz
 
-      - name: Generate patches
-        shell: bash
-        continue-on-error: true
-        run: |
-          cd ${{ env.SRCDIR }}
-          mv *.tar.xz .. && cd ..
-          rm -rf ${{ env.SRCDIR }}
-          ls -lsh && pwd
-          tar -xf chromium-$VERSION.tar.xz
-          mv chromium-$VERSION a
-          tar -xf chromium-$VERSION.tar.xz
-          mv chromium-$VERSION b
-          rm -f chromium-$VERSION.tar.xz
-          cd b
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
-          cd ..
-          ls -lsh && pwd
-          diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
-          ls -lsh && pwd
-
-      - name: Upload windows patch
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-patch-${{ env.VERSION }}
-          path: ${{ github.workspace }}\*.patch
 
   build1:
     needs: windows
@@ -106,24 +79,6 @@ jobs:
         with:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
-
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-patch-${{ env.VERSION }}
-          path: ${{ github.workspace }}\chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
 
       - name: Clone depot_tools
         shell: bash
@@ -145,18 +100,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
           mkdir -p out/release && cd out/release
           curl.exe -o args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/windows-args.gn
           sed -i "s/%api-key%/${{ secrets.GOOGLE_API_KEY }}/g" args.gn
@@ -211,24 +155,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-patch-${{ env.VERSION }}
-          path: ${{ github.workspace }}\chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -249,18 +175,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
 
       - name: Build content/public/browser
         shell: bash
@@ -315,24 +230,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-patch-${{ env.VERSION }}
-          path: ${{ github.workspace }}\chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -353,18 +250,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
 
       - name: Build chrome/browser/ui
         shell: bash
@@ -408,24 +294,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-patch-${{ env.VERSION }}
-          path: ${{ github.workspace }}\chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -446,18 +314,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
 
       - name: Build chrome/browser/ui
         shell: bash
@@ -501,24 +358,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-patch-${{ env.VERSION }}
-          path: ${{ github.workspace }}\chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -539,18 +378,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
 
       - name: Build chrome/browser
         shell: bash

@@ -12,7 +12,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 135
-        VERSION: 135.0.7049.95
+        VERSION: 135.0.7049.114
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -49,7 +49,7 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14481532875
+          run-id: 14653870442
 
       - name: Download out directory
         uses: actions/download-artifact@v4
@@ -57,7 +57,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14481532875
+          run-id: 14653870442
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v4
@@ -65,7 +65,7 @@ jobs:
           name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14481532875
+          run-id: 14653870442
 
       - uses: actions/checkout@v4
         with:
@@ -103,14 +103,23 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
+          rm -rf chrome/app/theme/chromium \
+            chrome/app/theme/default_100_percent \
+            chrome/app/theme/default_200_percent \
+            ui/webui/resources/images/chrome_logo_dark.svg
           cp -r ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
+          ls -lsh ui/webui/resources/images
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 

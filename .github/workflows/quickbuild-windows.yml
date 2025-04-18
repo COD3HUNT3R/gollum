@@ -12,7 +12,7 @@ jobs:
       runs-on: windows-latest
       env:
         VMAJOR: 135
-        VERSION: 135.0.7049.96
+        VERSION: 135.0.7049.115
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -23,7 +23,7 @@ jobs:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14481533719
+          run-id: 14606957582
 
       - name: Download out directory
         uses: actions/download-artifact@v4
@@ -31,7 +31,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14481533719
+          run-id: 14606957582
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v4
@@ -39,7 +39,7 @@ jobs:
           name: windows-patch-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14481533719
+          run-id: 14606957582
 
       - uses: actions/checkout@v4
         with:
@@ -77,8 +77,10 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
           patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
           rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
           cp -r ../desktop/chrome .

@@ -1,4 +1,4 @@
-name: partbuild-linux
+name: default-linux
 
 # Controls when the workflow will run
 on:
@@ -97,35 +97,6 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
 
-      - name: Generate patches
-        shell: bash
-        continue-on-error: true
-        run: |
-          cd $SRCDIR
-          mv *.tar.xz .. && cd ..
-          rm -rf $SRCDIR
-          ls -lsh && pwd
-          tar -xf chromium-$VERSION.tar.xz
-          mv chromium-$VERSION a
-          tar -xf chromium-$VERSION.tar.xz
-          mv chromium-$VERSION b
-          rm -f chromium-$VERSION.tar.xz
-          cd b
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/support.google.com/support.baraqah.org/g" {} +
-          cd ..
-          ls -lsh && pwd
-          diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
-          ls -lsh && pwd
-
-      - name: Upload patches
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/*.patch
-
   linuxbuild1:
     needs: linux
     runs-on: ubuntu-latest
@@ -168,24 +139,6 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -200,25 +153,12 @@ jobs:
       - name: Extract tar
         shell: bash
         run: |
-          cd $SRCDIR && ls -lsh desktop
+          cd $SRCDIR && ls -lsh
           tar -xf chromium-$VERSION.tar.xz
           ls -lsh
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
           sudo build/install-build-deps.sh
           mkdir -p out/release && cd out/release
           wget -O args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/linux-args.gn
@@ -300,24 +240,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -338,20 +260,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
@@ -434,24 +343,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -472,20 +363,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
@@ -557,24 +435,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -595,20 +455,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
@@ -686,24 +533,6 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
-        with:
-          name: linux-patch-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/desktop'
-          path: 'chromium-src/desktop'
-          token: ${{ secrets.PAT }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: 'COD3HUNT3R/patches'
-          path: 'chromium-src/patches'
-          token: ${{ secrets.PAT }}
-
       - name: Clone depot_tools
         shell: bash
         env:
@@ -724,20 +553,7 @@ jobs:
           ls -lsh
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
-          patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
-          pwd && ls -lsh chrome/app/theme/chromium
+          pwd && ls -lsh
           sudo build/install-build-deps.sh
           pwd && ls -lsh
 
