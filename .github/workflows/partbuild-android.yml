@@ -10,8 +10,8 @@ jobs:
   android:
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.111
+      VMAJOR: 136
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -28,7 +28,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -116,6 +116,8 @@ jobs:
           cd b
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
+          find . -type f -a \( -name "*.cc" -o -name "*.h" \) -a -exec sed -i -e "s/support.google.com/support.baraqah.org/g" {} +
           cd ..
           diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
           ls -lsh && pwd
@@ -130,8 +132,8 @@ jobs:
     needs: android
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.111
+      VMAJOR: 136
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -148,7 +150,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -245,8 +247,8 @@ jobs:
       needs: build1
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.111
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -263,7 +265,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -377,8 +379,8 @@ jobs:
       needs: build2
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.111
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -395,7 +397,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -497,8 +499,8 @@ jobs:
       needs: build3
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.111
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -515,7 +517,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -589,9 +591,10 @@ jobs:
 
       - name: Build chrome/browser
         shell: bash
+        continue-on-error: true
         run: |
           cd $SRCDIR/chromium-$VERSION
-          ninja -j 4 -C out/release chrome/browser
+          timeout 5h ninja -j 4 -C out/release chrome/browser
 
       - name: Compress artifacts
         shell: bash
@@ -610,8 +613,8 @@ jobs:
       needs: build4
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.111
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -628,7 +631,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -724,8 +727,8 @@ jobs:
       needs: build5
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.111
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -742,7 +745,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \

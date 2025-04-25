@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: tarball
+name: tarball-genpatch
 
 # Controls when the workflow will run
 on:
@@ -16,7 +16,7 @@ jobs:
   android:
     runs-on: ubuntu-latest
     env:
-      VERSION: 134.0.6998.135
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -136,7 +136,7 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     env:
-      VERSION: 135.0.7049.52
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -254,7 +254,7 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      VERSION: 135.0.7049.42
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -320,7 +320,9 @@ jobs:
           mv chromium-$VERSION b
           rm -f chromium-$VERSION.tar.xz
           cd b
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
+          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
           cd ..
           ls -lsh && pwd
           diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch

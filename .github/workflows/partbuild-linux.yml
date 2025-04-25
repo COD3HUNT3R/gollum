@@ -10,8 +10,8 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.114
+      VMAJOR: 136
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -28,7 +28,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -114,7 +114,7 @@ jobs:
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" -o -name "*.xml" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
-          find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/support.google.com/support.baraqah.org/g" {} +
+          find . -type f -a \( -name "*.cc" -o -name "*.h" \) -a -exec sed -i -e "s/support.google.com/support.baraqah.org/g" {} +
           cd ..
           ls -lsh && pwd
           diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
@@ -130,8 +130,8 @@ jobs:
     needs: linux
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.114
+      VMAJOR: 136
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -148,7 +148,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -210,14 +210,17 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           mkdir -p out/release && cd out/release
@@ -256,8 +259,8 @@ jobs:
       needs: linuxbuild1
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -274,7 +277,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -343,14 +346,17 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh
@@ -390,8 +396,8 @@ jobs:
       needs: linuxbuild2
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -408,7 +414,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -477,14 +483,17 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh
@@ -513,8 +522,8 @@ jobs:
       needs: linuxbuild3
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -531,7 +540,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -600,14 +609,17 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh
@@ -642,8 +654,8 @@ jobs:
       needs: linuxbuild4
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -660,7 +672,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -729,14 +741,17 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
           sudo build/install-build-deps.sh
           pwd && ls -lsh

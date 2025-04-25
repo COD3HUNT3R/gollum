@@ -10,8 +10,8 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.115
+      VMAJOR: 136
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -80,6 +80,7 @@ jobs:
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
+          find . -type f -a \( -name "*.cc" \) -a -exec sed -i -e "s/support.google.com/support.baraqah.org/g" {} +
           cd ..
           ls -lsh && pwd
           diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
@@ -95,8 +96,8 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.115
+      VMAJOR: 136
+      VERSION: 136.0.7103.48
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -153,9 +154,11 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
           mkdir -p out/release && cd out/release
           curl.exe -o args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/windows-args.gn
@@ -173,9 +176,10 @@ jobs:
 
       - name: Build content/public/common
         shell: bash
+        continue-on-error: true
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ninja -j 4 -C out/release content/public/common
+          timeout 5h ninja -j 4 -C out/release content/public/common
 
       - name: Compress artifacts
         shell: bash
@@ -193,8 +197,8 @@ jobs:
       needs: build1
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -257,9 +261,11 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build content/public/browser
@@ -297,8 +303,8 @@ jobs:
       needs: build2
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -361,9 +367,11 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser/ui
@@ -390,8 +398,8 @@ jobs:
       needs: build3
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -454,9 +462,11 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser/ui
@@ -483,8 +493,8 @@ jobs:
       needs: build4
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 136
+        VERSION: 136.0.7103.48
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -547,9 +557,11 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          rm -rf chrome/app/theme/chromium chrome/app/theme/default_100_percent chrome/app/theme/default_200_percent
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
+          cp -rf ../desktop/components .
+          cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser

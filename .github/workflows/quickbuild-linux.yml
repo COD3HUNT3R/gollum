@@ -29,7 +29,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
@@ -108,14 +108,11 @@ jobs:
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
           patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          rm -rf chrome/app/theme/chromium \
-            chrome/app/theme/default_100_percent \
-            chrome/app/theme/default_200_percent \
-            ui/webui/resources/images/chrome_logo_dark.svg
-          cp -r ../desktop/chrome .
+          cp -rf ../desktop/chrome .
           cp -rf ../desktop/components .
           cp -rf ../desktop/ui .
           pwd && ls -lsh chrome/app/theme/chromium
