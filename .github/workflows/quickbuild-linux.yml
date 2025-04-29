@@ -11,8 +11,8 @@ jobs:
   quicklinux:
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 136
+        VERSION: 136.0.7103.59
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -49,7 +49,7 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14653870442
+          run-id: 14743501563
 
       - name: Download out directory
         uses: actions/download-artifact@v4
@@ -57,7 +57,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14653870442
+          run-id: 14743501563
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v4
@@ -65,7 +65,7 @@ jobs:
           name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14653870442
+          run-id: 14743501563
 
       - uses: actions/checkout@v4
         with:
@@ -100,6 +100,8 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch

@@ -11,8 +11,8 @@ jobs:
   quickwindows:
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 136
+        VERSION: 136.0.7103.49
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -23,7 +23,7 @@ jobs:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14606957582
+          run-id: 14743534050
 
       - name: Download out directory
         uses: actions/download-artifact@v4
@@ -31,7 +31,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14606957582
+          run-id: 14743534050
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v4
@@ -39,7 +39,7 @@ jobs:
           name: windows-patch-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14606957582
+          run-id: 14743534050
 
       - uses: actions/checkout@v4
         with:
@@ -74,6 +74,8 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch

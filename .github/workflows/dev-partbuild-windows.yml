@@ -1,4 +1,4 @@
-name: partbuild-windows
+name: dev-partbuild-windows
 
 # Controls when the workflow will run
 on:
@@ -10,8 +10,8 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      VMAJOR: 136
-      VERSION: 136.0.7103.49
+      VMAJOR: 137
+      VERSION: 137.0.7141.3
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -80,6 +80,7 @@ jobs:
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chromium/Baraqah/g" {} +
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Chrome/Baraqah/g" {} +
           find . -type f -a \( -name "*.grd" -o -name "*.grdp" -o -name "*.xtb" \) -a -exec sed -i -e "s/Google/Baraqah/g" {} +
+          find . -type f -a \( -name "*.cc" \) -a -exec sed -i -e "s/support.google.com/support.baraqah.org/g" {} +
           cd ..
           ls -lsh && pwd
           diff -urN a b > baraqah$VMAJOR-$VERSION-branding.patch
@@ -95,8 +96,8 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VMAJOR: 136
-      VERSION: 136.0.7103.49
+      VMAJOR: 137
+      VERSION: 137.0.7141.3
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -196,8 +197,8 @@ jobs:
       needs: build1
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.49
+        VMAJOR: 137
+        VERSION: 137.0.7141.3
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -302,8 +303,8 @@ jobs:
       needs: build2
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.49
+        VMAJOR: 137
+        VERSION: 137.0.7141.3
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -397,8 +398,8 @@ jobs:
       needs: build3
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.49
+        VMAJOR: 137
+        VERSION: 137.0.7141.3
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -492,8 +493,8 @@ jobs:
       needs: build4
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.49
+        VMAJOR: 137
+        VERSION: 137.0.7141.3
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
