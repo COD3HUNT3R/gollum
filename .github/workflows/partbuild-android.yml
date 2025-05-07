@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VMAJOR: 136
-      VERSION: 136.0.7103.60
+      VERSION: 136.0.7103.87
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -133,7 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VMAJOR: 136
-      VERSION: 136.0.7103.60
+      VERSION: 136.0.7103.87
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -250,7 +250,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 136
-        VERSION: 136.0.7103.60
+        VERSION: 136.0.7103.87
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -384,7 +384,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 136
-        VERSION: 136.0.7103.60
+        VERSION: 136.0.7103.87
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -506,7 +506,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 136
-        VERSION: 136.0.7103.60
+        VERSION: 136.0.7103.87
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -622,7 +622,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 136
-        VERSION: 136.0.7103.60
+        VERSION: 136.0.7103.87
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -738,7 +738,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 136
-        VERSION: 136.0.7103.60
+        VERSION: 136.0.7103.87
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
