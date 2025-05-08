@@ -56,5 +56,12 @@ jobs:
           curl -s https://storage.googleapis.com/git-repo-downloads/repo.asc | gpg --verify - ${REPO} && sudo install -m 755 ${REPO} /usr/bin/repo
           mkdir -p $SRCDIR && cd $SRCDIR
           repo init --partial-clone --no-use-superproject -b $BRANCH -u https://android.googlesource.com/platform/manifest
-          repo sync -c -j1
+          repo sync -c -j4
           source build/envsetup.sh
+          ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/aosp.tar.zst ./aosp-src
+
+      - name: Upload aosp src
+        uses: actions/upload-artifact@v4
+        with:
+          name: aosp-src-${{ env.VERSION }}
+          path: /home/runner/work/gollum/gollum/chromium-src/aosp.tar.zst
