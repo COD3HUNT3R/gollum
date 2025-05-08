@@ -146,6 +146,7 @@ jobs:
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
@@ -253,6 +254,7 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
@@ -359,6 +361,7 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
@@ -454,6 +457,7 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
@@ -549,6 +553,7 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
+          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
