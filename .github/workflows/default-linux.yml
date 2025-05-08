@@ -10,8 +10,8 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.114
+      VMAJOR: 139
+      VERSION: 139.0.7258.138
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -101,8 +101,8 @@ jobs:
     needs: linux
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.114
+      VMAJOR: 139
+      VERSION: 139.0.7258.138
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -166,7 +166,7 @@ jobs:
           sed -i "s/%client-id%/${{ secrets.GOOGLE_CLIENT_ID }}/g" args.gn
           sed -i "s/%client-secret%/${{ secrets.GOOGLE_CLIENT_SECRET }}/g" args.gn
           cd ../.. && pwd && ls -lsh
-          gn gen out/release
+          /home/runner/work/gollum/gollum/chromium-src/depot_tools/gn.py gen out/release
 
       - name: Build base
         shell: bash
@@ -196,8 +196,8 @@ jobs:
       needs: linuxbuild1
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 139
+        VERSION: 139.0.7258.138
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -299,8 +299,8 @@ jobs:
       needs: linuxbuild2
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 139
+        VERSION: 139.0.7258.138
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -391,8 +391,8 @@ jobs:
       needs: linuxbuild3
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 139
+        VERSION: 139.0.7258.138
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -489,8 +489,8 @@ jobs:
       needs: linuxbuild4
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.114
+        VMAJOR: 139
+        VERSION: 139.0.7258.138
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space

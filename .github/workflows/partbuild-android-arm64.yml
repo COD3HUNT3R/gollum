@@ -1,4 +1,4 @@
-name: partbuild-android
+name: partbuild-android-arm64
 
 # Controls when the workflow will run
 on:
@@ -10,8 +10,8 @@ jobs:
   android:
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 136
-      VERSION: 136.0.7103.87
+      VMAJOR: 139
+      VERSION: 139.0.7258.143
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -132,8 +132,8 @@ jobs:
     needs: android
     runs-on: ubuntu-latest
     env:
-      VMAJOR: 136
-      VERSION: 136.0.7103.87
+      VMAJOR: 139
+      VERSION: 139.0.7258.143
       SRCDIR: chromium-src
     steps:
       - name: Maximize build space
@@ -208,10 +208,11 @@ jobs:
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
           cp -rf ../android/chrome .
           cp -rf ../android/components .
@@ -224,7 +225,7 @@ jobs:
           sed -i "s/%client-id%/${{ secrets.GOOGLE_CLIENT_ID }}/g" args.gn
           sed -i "s/%client-secret%/${{ secrets.GOOGLE_CLIENT_SECRET }}/g" args.gn
           cd ../.. && pwd && ls -lsh
-          gn gen out/release
+          /home/runner/work/gollum/gollum/chromium-src/depot_tools/gn.py gen out/release
 
       - name: Build content/public/browser
         shell: bash
@@ -249,8 +250,8 @@ jobs:
       needs: build1
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.87
+        VMAJOR: 139
+        VERSION: 139.0.7258.143
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -332,10 +333,11 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
           cp -rf ../android/chrome .
           cp -rf ../android/components .
@@ -383,8 +385,8 @@ jobs:
       needs: build2
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.87
+        VMAJOR: 139
+        VERSION: 139.0.7258.143
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -466,10 +468,11 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
           cp -rf ../android/chrome .
           cp -rf ../android/components .
@@ -505,8 +508,8 @@ jobs:
       needs: build3
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.87
+        VMAJOR: 139
+        VERSION: 139.0.7258.143
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -588,10 +591,11 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
           cp -rf ../android/chrome .
           cp -rf ../android/components .
@@ -621,8 +625,8 @@ jobs:
       needs: build4
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.87
+        VMAJOR: 139
+        VERSION: 139.0.7258.143
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -704,10 +708,11 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
           cp -rf ../android/chrome .
           cp -rf ../android/components .
@@ -737,8 +742,8 @@ jobs:
       needs: build5
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.87
+        VMAJOR: 139
+        VERSION: 139.0.7258.143
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -820,10 +825,11 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
           cp -rf ../android/chrome .
           cp -rf ../android/components .

@@ -10,8 +10,8 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.115
+      VMAJOR: 139
+      VERSION: 139.0.7258.139
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -68,8 +68,8 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VMAJOR: 135
-      VERSION: 135.0.7049.115
+      VMAJOR: 139
+      VERSION: 139.0.7258.139
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -107,7 +107,7 @@ jobs:
           sed -i "s/%client-id%/${{ secrets.GOOGLE_CLIENT_ID }}/g" args.gn
           sed -i "s/%client-secret%/${{ secrets.GOOGLE_CLIENT_SECRET }}/g" args.gn
           cd ../.. && pwd && ls -lsh
-          gn gen out/release
+          $GITHUB_WORKSPACE/chromium-src/depot_tools/gn.py gen out/release
 
       - name: Build base
         shell: bash
@@ -137,8 +137,8 @@ jobs:
       needs: build1
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -212,8 +212,8 @@ jobs:
       needs: build2
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -276,8 +276,8 @@ jobs:
       needs: build3
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -340,8 +340,8 @@ jobs:
       needs: build4
       runs-on: windows-latest
       env:
-        VMAJOR: 135
-        VERSION: 135.0.7049.115
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native

@@ -11,8 +11,8 @@ jobs:
   quicklinux:
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.92
+        VMAJOR: 139
+        VERSION: 139.0.7258.138
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
@@ -49,7 +49,7 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14875574394
+          run-id: 17085256597
 
       - name: Download out directory
         uses: actions/download-artifact@v4
@@ -57,7 +57,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14875574394
+          run-id: 17085256597
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v4
@@ -65,12 +65,18 @@ jobs:
           name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 14875574394
+          run-id: 17085256597
 
       - uses: actions/checkout@v4
         with:
           repository: 'COD3HUNT3R/desktop'
           path: 'chromium-src/desktop'
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/extensions'
+          path: 'chromium-src/extensions'
           token: ${{ secrets.PAT }}
 
       - uses: actions/checkout@v4
@@ -100,23 +106,27 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
-          patch -p1 < ../patches/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-domain-reliability.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
           cp -rf ../desktop/chrome .
           cp -rf ../desktop/components .
           cp -rf ../desktop/ui .
+          cp -rf ../extensions/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
           ls -lsh ui/webui/resources/images
           sudo build/install-build-deps.sh

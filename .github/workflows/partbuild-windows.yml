@@ -10,8 +10,8 @@ jobs:
   windows:
     runs-on: windows-latest
     env:
-      VMAJOR: 136
-      VERSION: 136.0.7103.93
+      VMAJOR: 139
+      VERSION: 139.0.7258.139
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -95,8 +95,8 @@ jobs:
     needs: windows
     runs-on: windows-latest
     env:
-      VMAJOR: 136
-      VERSION: 136.0.7103.93
+      VMAJOR: 139
+      VERSION: 139.0.7258.139
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -117,6 +117,12 @@ jobs:
         with:
           repository: 'COD3HUNT3R/desktop'
           path: 'chromium-src/desktop'
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'COD3HUNT3R/extensions'
+          path: 'chromium-src/extensions'
           token: ${{ secrets.PAT }}
 
       - uses: actions/checkout@v4
@@ -146,19 +152,25 @@ jobs:
           rm -f chromium-$VERSION.tar.xz
           cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-domain-reliability.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
           cp -rf ../desktop/chrome .
           cp -rf ../desktop/components .
           cp -rf ../desktop/ui .
+          cp -rf ../extensions/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
           mkdir -p out/release && cd out/release
           curl.exe -o args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/windows-args.gn
@@ -166,7 +178,7 @@ jobs:
           sed -i "s/%client-id%/${{ secrets.GOOGLE_CLIENT_ID }}/g" args.gn
           sed -i "s/%client-secret%/${{ secrets.GOOGLE_CLIENT_SECRET }}/g" args.gn
           cd ../.. && pwd && ls -lsh
-          gn gen out/release
+          $GITHUB_WORKSPACE/chromium-src/depot_tools/gn.py gen out/release
 
       - name: Build base
         shell: bash
@@ -197,8 +209,8 @@ jobs:
       needs: build1
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.93
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -229,6 +241,12 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          repository: 'COD3HUNT3R/extensions'
+          path: 'chromium-src/extensions'
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/checkout@v4
+        with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
           token: ${{ secrets.PAT }}
@@ -254,19 +272,25 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-domain-reliability.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
           cp -rf ../desktop/chrome .
           cp -rf ../desktop/components .
           cp -rf ../desktop/ui .
+          cp -rf ../extensions/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build content/public/browser
@@ -304,8 +328,8 @@ jobs:
       needs: build2
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.93
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -336,6 +360,12 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          repository: 'COD3HUNT3R/extensions'
+          path: 'chromium-src/extensions'
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/checkout@v4
+        with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
           token: ${{ secrets.PAT }}
@@ -361,19 +391,25 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-domain-reliability.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
           cp -rf ../desktop/chrome .
           cp -rf ../desktop/components .
           cp -rf ../desktop/ui .
+          cp -rf ../extensions/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser/ui
@@ -400,8 +436,8 @@ jobs:
       needs: build3
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.93
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -432,6 +468,12 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          repository: 'COD3HUNT3R/extensions'
+          path: 'chromium-src/extensions'
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/checkout@v4
+        with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
           token: ${{ secrets.PAT }}
@@ -457,19 +499,25 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-domain-reliability.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
           cp -rf ../desktop/chrome .
           cp -rf ../desktop/components .
           cp -rf ../desktop/ui .
+          cp -rf ../extensions/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser/ui
@@ -496,8 +544,8 @@ jobs:
       needs: build4
       runs-on: windows-latest
       env:
-        VMAJOR: 136
-        VERSION: 136.0.7103.93
+        VMAJOR: 139
+        VERSION: 139.0.7258.139
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -528,6 +576,12 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          repository: 'COD3HUNT3R/extensions'
+          path: 'chromium-src/extensions'
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/checkout@v4
+        with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
           token: ${{ secrets.PAT }}
@@ -553,19 +607,25 @@ jobs:
           rm -f chromium-$VERSION.tar.xz out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
-          patch -p1 < ../patches/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
-          patch -p1 < ../patches/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
-          patch -p1 < ../patches/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-time-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-domain-reliability.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-browser-feedback.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
           cp -rf ../desktop/chrome .
           cp -rf ../desktop/components .
           cp -rf ../desktop/ui .
+          cp -rf ../extensions/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser
