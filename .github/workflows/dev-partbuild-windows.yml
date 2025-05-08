@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     env:
       VMAJOR: 137
-      VERSION: 137.0.7141.3
+      VERSION: 137.0.7151.15
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -97,7 +97,7 @@ jobs:
     runs-on: windows-latest
     env:
       VMAJOR: 137
-      VERSION: 137.0.7141.3
+      VERSION: 137.0.7151.15
       SRCDIR: chromium-src
       DEPOT_TOOLS_WIN_TOOLCHAIN: 0
       MSYS: winsymlinks:native
@@ -198,7 +198,7 @@ jobs:
       runs-on: windows-latest
       env:
         VMAJOR: 137
-        VERSION: 137.0.7141.3
+        VERSION: 137.0.7151.15
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -304,7 +304,7 @@ jobs:
       runs-on: windows-latest
       env:
         VMAJOR: 137
-        VERSION: 137.0.7141.3
+        VERSION: 137.0.7151.15
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -399,7 +399,7 @@ jobs:
       runs-on: windows-latest
       env:
         VMAJOR: 137
-        VERSION: 137.0.7141.3
+        VERSION: 137.0.7151.15
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
@@ -494,7 +494,7 @@ jobs:
       runs-on: windows-latest
       env:
         VMAJOR: 137
-        VERSION: 137.0.7141.3
+        VERSION: 137.0.7151.15
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
