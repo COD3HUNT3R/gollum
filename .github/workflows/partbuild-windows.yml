@@ -167,10 +167,10 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          cp -rf ../desktop/chrome .
-          cp -rf ../desktop/components .
-          cp -rf ../desktop/ui .
-          cp -rf ../extensions/chrome .
+          cp -rf ../desktop/baraqah/chrome .
+          cp -rf ../desktop/baraqah/components .
+          cp -rf ../desktop/baraqah/ui .
+          cp -rf ../extensions/baraqah/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
           mkdir -p out/release && cd out/release
           curl.exe -o args.gn https://raw.githubusercontent.com/COD3HUNT3R/gollum/refs/heads/main/windows-args.gn
@@ -287,10 +287,10 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          cp -rf ../desktop/chrome .
-          cp -rf ../desktop/components .
-          cp -rf ../desktop/ui .
-          cp -rf ../extensions/chrome .
+          cp -rf ../desktop/baraqah/chrome .
+          cp -rf ../desktop/baraqah/components .
+          cp -rf ../desktop/baraqah/ui .
+          cp -rf ../extensions/baraqah/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build content/public/browser
@@ -406,10 +406,10 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          cp -rf ../desktop/chrome .
-          cp -rf ../desktop/components .
-          cp -rf ../desktop/ui .
-          cp -rf ../extensions/chrome .
+          cp -rf ../desktop/baraqah/chrome .
+          cp -rf ../desktop/baraqah/components .
+          cp -rf ../desktop/baraqah/ui .
+          cp -rf ../extensions/baraqah/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser/ui
@@ -514,10 +514,10 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          cp -rf ../desktop/chrome .
-          cp -rf ../desktop/components .
-          cp -rf ../desktop/ui .
-          cp -rf ../extensions/chrome .
+          cp -rf ../desktop/baraqah/chrome .
+          cp -rf ../desktop/baraqah/components .
+          cp -rf ../desktop/baraqah/ui .
+          cp -rf ../extensions/baraqah/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser/ui
@@ -622,10 +622,10 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
-          cp -rf ../desktop/chrome .
-          cp -rf ../desktop/components .
-          cp -rf ../desktop/ui .
-          cp -rf ../extensions/chrome .
+          cp -rf ../desktop/baraqah/chrome .
+          cp -rf ../desktop/baraqah/components .
+          cp -rf ../desktop/baraqah/ui .
+          cp -rf ../extensions/baraqah/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome/browser

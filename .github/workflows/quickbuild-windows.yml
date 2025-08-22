@@ -96,10 +96,10 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-install-directory-constants.patch
           #patch -p1 < ../patches/baraqah/$VMAJOR/windows/baraqah$VMAJOR-windows-updater.patch
-          cp -rf ../desktop/chrome .
-          cp -rf ../desktop/components .
-          cp -rf ../desktop/ui .
-          cp -rf ../extensions/chrome .
+          cp -rf ../desktop/baraqah/chrome .
+          cp -rf ../desktop/baraqah/components .
+          cp -rf ../desktop/baraqah/ui .
+          cp -rf ../extensions/baraqah/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
 
       - name: Build chrome

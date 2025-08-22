@@ -214,8 +214,8 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
-          cp -rf ../android/chrome .
-          cp -rf ../android/components .
+          cp -rf ../android/baraqah/chrome .
+          cp -rf ../android/baraqah/components .
           pwd && ls -lsh chrome/android/java/res_chromium_base
           sudo build/install-build-deps.sh
           mkdir -p out/release && cd out/release
@@ -340,8 +340,8 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
-          cp -rf ../android/chrome .
-          cp -rf ../android/components .
+          cp -rf ../android/baraqah/chrome .
+          cp -rf ../android/baraqah/components .
           pwd && ls -lsh chrome/android/java/res_chromium_base
 
       - name: Build content/public/browser
@@ -475,8 +475,8 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
-          cp -rf ../android/chrome .
-          cp -rf ../android/components .
+          cp -rf ../android/baraqah/chrome .
+          cp -rf ../android/baraqah/components .
           pwd && ls -lsh chrome/android/java/res_chromium_base
 
       - name: Build chrome/browser/ui
@@ -598,8 +598,8 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
-          cp -rf ../android/chrome .
-          cp -rf ../android/components .
+          cp -rf ../android/baraqah/chrome .
+          cp -rf ../android/baraqah/components .
           pwd && ls -lsh chrome/android/java/res_chromium_base
 
       - name: Build chrome/browser
@@ -715,8 +715,8 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
-          cp -rf ../android/chrome .
-          cp -rf ../android/components .
+          cp -rf ../android/baraqah/chrome .
+          cp -rf ../android/baraqah/components .
           pwd && ls -lsh chrome/android/java/res_chromium_base
 
       - name: Build apk
@@ -832,8 +832,8 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/android/baraqah$VMAJOR-news-feeds.patch
           rm -rf chrome/android/java/res_chromium_base
-          cp -rf ../android/chrome .
-          cp -rf ../android/components .
+          cp -rf ../android/baraqah/chrome .
+          cp -rf ../android/baraqah/components .
           pwd && ls -lsh chrome/android/java/res_chromium_base
 
       - name: Build apk

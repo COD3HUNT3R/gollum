@@ -123,10 +123,10 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
-          cp -rf ../desktop/chrome .
-          cp -rf ../desktop/components .
-          cp -rf ../desktop/ui .
-          cp -rf ../extensions/chrome .
+          cp -rf ../desktop/baraqah/chrome .
+          cp -rf ../desktop/baraqah/components .
+          cp -rf ../desktop/baraqah/ui .
+          cp -rf ../extensions/baraqah/chrome .
           pwd && ls -lsh chrome/app/theme/chromium
           ls -lsh ui/webui/resources/images
           sudo build/install-build-deps.sh
