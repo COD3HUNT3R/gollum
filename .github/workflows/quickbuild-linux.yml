@@ -160,13 +160,13 @@ jobs:
       - name: Upload DEB packages
         uses: actions/upload-artifact@v4
         with:
-          name: packages-linux-deb-${{ env.VERSION }}
+          name: packages-linux-baraqah-deb-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/chromium-${{ env.VERSION }}/out/release/*.deb
 
       - name: Upload RPM packages
         uses: actions/upload-artifact@v4
         with:
-          name: packages-linux-rpm-${{ env.VERSION }}
+          name: packages-linux-baraqah-rpm-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/chromium-${{ env.VERSION }}/out/release/*.rpm
 
       - name: Compress artifacts

@@ -120,12 +120,13 @@ jobs:
         run: |
           cd $SRCDIR/chromium-$VERSION
           ninja -j 4 -C out/release chrome_public_apk
+          mv out/release/apks/ChromePublic.apk out/release/apks/baraqah-browser-$VERSION.apk
           ls -lsh out/release/apks
 
       - name: Upload apks
         uses: actions/upload-artifact@v4
         with:
-          name: apks-${{ env.VERSION }}
+          name: baraqah-apks-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/chromium-${{ env.VERSION }}/out/release/apks
 
       - name: Compress artifacts

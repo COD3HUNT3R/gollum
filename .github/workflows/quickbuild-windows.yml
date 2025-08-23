@@ -125,7 +125,7 @@ jobs:
       - name: Upload windows packages
         uses: actions/upload-artifact@v4
         with:
-          name: packages-windows-${{ env.VERSION }}
+          name: packages-baraqah-windows-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src\chromium-${{ env.VERSION }}\out\release\*.exe
 
       - name: Compress artifacts
