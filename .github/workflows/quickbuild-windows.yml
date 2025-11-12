@@ -11,8 +11,8 @@ jobs:
   quickwindows:
       runs-on: windows-latest
       env:
-        VMAJOR: 139
-        VERSION: 139.0.7258.139
+        VMAJOR: 142
+        VERSION: 142.0.7444.163
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
