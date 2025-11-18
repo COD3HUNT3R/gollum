@@ -12,7 +12,7 @@ jobs:
       runs-on: windows-latest
       env:
         VMAJOR: 142
-        VERSION: 142.0.7444.163
+        VERSION: 142.0.7444.176
         SRCDIR: chromium-src
         DEPOT_TOOLS_WIN_TOOLCHAIN: 0
         MSYS: winsymlinks:native
