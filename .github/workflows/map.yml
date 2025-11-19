@@ -44,7 +44,11 @@ jobs:
       - name: Configure environment
         run: |
           sudo apt-get install -y tilemaker tippecanoe wget
-          mkdir -p $SRCDIR/bin/{osm.pbf,mbtiles,all,bin} && cd $SRCDIR
+          mkdir -p $SRCDIR/bin/{osm.pbf,mbtiles,all} && cd $SRCDIR
+          wget https://github.com/COD3HUNT3R/gollum/releases/download/v1/config.zip
+          wget https://github.com/COD3HUNT3R/gollum/releases/download/v1/process.zip
+          unzip config.zip
+          unzip process.zip
 
       - name: Adding bin dir to path
         env:
