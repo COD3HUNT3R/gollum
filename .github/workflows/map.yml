@@ -27,7 +27,7 @@ jobs:
           sudo swapoff -av
           sudo rm -f /swapfile
 
-      - name: "remove not needed items"
+      - name: Remove not needed items
         run: |
           sudo rm -rf /usr/local/.ghcup \
             /usr/share/dotnet \
