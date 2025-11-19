@@ -43,7 +43,7 @@ jobs:
 
       - name: Configure environment
         run: |
-          sudo apt-get install -y tilemaker tippecanoe
+          sudo apt-get install -y tilemaker tippecanoe wget
           mkdir -p $SRCDIR/bin/{osm.pbf,mbtiles,all,bin} && cd $SRCDIR
 
       - name: Adding bin dir to path
@@ -56,7 +56,7 @@ jobs:
         run: |
           cd $SRCDIR
           for country in bangladesh bhutan india myanmar nepal pakistan sri-lanka; do
-            wget -c https://download.geofabrik.de/asia/$country-$DATE.osm.pbf -O osm.pbf/
+            wget -c https://download.geofabrik.de/asia/$country-$DATE.osm.pbf -P osm.pbf/
             tilemaker --input=osm.pbf/$country-$DATE.osm.pbf --output=mbtiles/$country-$DATE.mbtiles --config=config/config-openmaptiles.json --process=process/process-openmaptiles.lua
           done
       
