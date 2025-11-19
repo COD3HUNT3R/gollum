@@ -43,7 +43,7 @@ jobs:
 
       - name: Configure environment
         run: |
-          sudo apt-get install -y tilemaker tippecanoe wget
+          sudo apt-get install -y tilemaker tippecanoe wget lua5.4 liblua5.4-dev
           mkdir -p $SRCDIR/bin/{osm.pbf,mbtiles,all} && cd $SRCDIR
           wget https://github.com/COD3HUNT3R/gollum/releases/download/v1/config.zip
           wget https://github.com/COD3HUNT3R/gollum/releases/download/v1/process.zip
