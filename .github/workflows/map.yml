@@ -1,4 +1,4 @@
-name: default-linux
+name: map
 
 # Controls when the workflow will run
 on:
