@@ -79,7 +79,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.latest-version.outputs.linux_version }}
-          PLATFORM: Linux
+          PLATFORM: FreeBSD
           NOTIFY_MAINTAINERS: "${{ steps.maintainers.outputs.all }} ${{ steps.maintainers.outputs.freebsd }}"
         with:
           update_existing: false
