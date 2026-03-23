@@ -202,7 +202,7 @@ def main(argv):
     archive.close()
   zstd.stdin.close()
   if zstd.wait() != 0:
-    print('zstd failed!')
+    print('zstd -12 failed!')
     return 1
   tarball.flush()
   tarball.close()
