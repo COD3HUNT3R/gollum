@@ -176,7 +176,7 @@ def main(argv):
       ['zstd', '-T0', '-12'] + (['-v'] if options.progress else []) + ['-'],
       stdin=subprocess.PIPE,
       stdout=tarball)
-  archive = MyTarFile.open(None, 'w|', xz.stdin)
+  archive = MyTarFile.open(None, 'w|', zstd.stdin)
   archive.set_remove_nonessential_files(options.remove_nonessential_files)
   archive.set_verbose(options.verbose)
   archive.set_src_dir(options.src_dir)
