@@ -119,7 +119,7 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-extensions-manifestv2.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-opera-addons-extension-store.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-pin-extension-beside-omnibar.patch
-          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kahf-doh-server.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-porda-ai-extension-and-kingdom-doh-server.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-keyring.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-installer.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/linux/baraqah$VMAJOR-linux-config-dir-location.patch
