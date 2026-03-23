@@ -49,7 +49,7 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 17085256597
+          run-id: 23422234933
 
       - name: Download out directory
         uses: actions/download-artifact@v5
@@ -57,7 +57,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 17085256597
+          run-id: 23422234933
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v5
@@ -65,7 +65,7 @@ jobs:
           name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 17085256597
+          run-id: 23422234933
 
       - uses: actions/checkout@v4
         with:
