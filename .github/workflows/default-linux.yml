@@ -95,7 +95,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-src-${{ env.VERSION }}
-          path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
+          path: /home/runner/work/gollum/gollum/chromium-src/*.tar.zst
 
   linuxbuild1:
     needs: linux
@@ -154,9 +154,9 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR && ls -lsh
-          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.zst
           ls -lsh
-          rm -f chromium-$VERSION.tar.xz
+          rm -f chromium-$VERSION.tar.zst
           cd chromium-$VERSION
           pwd && ls -lsh
           sudo build/install-build-deps.sh
@@ -255,10 +255,10 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR && ls -lsh
-          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.zst
           tar -xf out.tar.zst
           ls -lsh
-          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          rm -f chromium-$VERSION.tar.zst out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
           sudo build/install-build-deps.sh
@@ -358,10 +358,10 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR && ls -lsh
-          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.zst
           tar -xf out.tar.zst
           ls -lsh
-          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          rm -f chromium-$VERSION.tar.zst out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
           sudo build/install-build-deps.sh
@@ -450,10 +450,10 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR && ls -lsh
-          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.zst
           tar -xf out.tar.zst
           ls -lsh
-          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          rm -f chromium-$VERSION.tar.zst out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
           sudo build/install-build-deps.sh
@@ -548,10 +548,10 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR && ls -lsh
-          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.zst
           tar -xf out.tar.zst
           ls -lsh
-          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          rm -f chromium-$VERSION.tar.zst out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           pwd && ls -lsh
           sudo build/install-build-deps.sh
