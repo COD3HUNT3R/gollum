@@ -44,7 +44,7 @@ jobs:
           sudo docker builder prune -a
 
       - name: Download source tarball
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
@@ -52,7 +52,7 @@ jobs:
           run-id: 17085256597
 
       - name: Download out directory
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
@@ -60,7 +60,7 @@ jobs:
           run-id: 17085256597
 
       - name: Download versioned branding patches
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
