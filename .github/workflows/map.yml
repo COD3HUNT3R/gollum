@@ -71,7 +71,7 @@ jobs:
           tile-join -o all/all.mbtiles mbtiles/*.mbtiles
 
       - name: Upload mbtiles map
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maps-${{ env.DATE }}
           path: /home/runner/work/gollum/gollum/maps-src/all/*.mbtiles

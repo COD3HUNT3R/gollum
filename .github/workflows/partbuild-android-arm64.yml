@@ -95,7 +95,7 @@ jobs:
           pwd
 
       - name: Upload source tarball
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
@@ -123,7 +123,7 @@ jobs:
           ls -lsh && pwd
 
       - name: Upload patches
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/*.patch
@@ -165,24 +165,24 @@ jobs:
           sudo docker builder prune -a
 
       - name: Download source tarball
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download versioned branding patches
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/android'
           path: 'chromium-src/android'
           token: ${{ secrets.PAT }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
@@ -241,7 +241,7 @@ jobs:
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload out directory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
@@ -283,30 +283,30 @@ jobs:
           sudo docker builder prune -a
 
       - name: Download source tarball
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download out directory
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download versioned branding patches
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/android'
           path: 'chromium-src/android'
           token: ${{ secrets.PAT }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
@@ -375,7 +375,7 @@ jobs:
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload out directory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
@@ -418,30 +418,30 @@ jobs:
           sudo docker builder prune -a
 
       - name: Download source tarball
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download out directory
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download versioned branding patches
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/android'
           path: 'chromium-src/android'
           token: ${{ secrets.PAT }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
@@ -498,7 +498,7 @@ jobs:
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload out directory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
@@ -541,30 +541,30 @@ jobs:
           sudo docker builder prune -a
 
       - name: Download source tarball
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download out directory
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download versioned branding patches
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/android'
           path: 'chromium-src/android'
           token: ${{ secrets.PAT }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
@@ -615,7 +615,7 @@ jobs:
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload out directory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
@@ -658,30 +658,30 @@ jobs:
           sudo docker builder prune -a
 
       - name: Download source tarball
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download out directory
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download versioned branding patches
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/android'
           path: 'chromium-src/android'
           token: ${{ secrets.PAT }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
@@ -732,7 +732,7 @@ jobs:
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload out directory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst
@@ -775,30 +775,30 @@ jobs:
           sudo docker builder prune -a
 
       - name: Download source tarball
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download out directory
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
       - name: Download versioned branding patches
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/android'
           path: 'chromium-src/android'
           token: ${{ secrets.PAT }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: 'COD3HUNT3R/patches'
           path: 'chromium-src/patches'
@@ -843,7 +843,7 @@ jobs:
           ls -lsh out/release/apks
 
       - name: Upload apks
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: apks-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/chromium-${{ env.VERSION }}/out/release/apks
@@ -855,7 +855,7 @@ jobs:
           ZSTD_CLEVEL=12 tar -I zstd -cvpf /home/runner/work/gollum/gollum/chromium-src/out.tar.zst ./out
 
       - name: Upload out directory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/out.tar.zst

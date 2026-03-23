@@ -101,7 +101,7 @@ jobs:
           pwd
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
@@ -127,7 +127,7 @@ jobs:
           ls -lsh && pwd
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/*.patch
@@ -219,7 +219,7 @@ jobs:
           pwd
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src/*.tar.xz
@@ -245,7 +245,7 @@ jobs:
           ls -lsh && pwd
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/*.patch
@@ -301,7 +301,7 @@ jobs:
           pwd
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: windows-src-${{ env.VERSION }}
           path: ${{ github.workspace }}\chromium-src\*.tar.xz
@@ -329,7 +329,7 @@ jobs:
           ls -lsh && pwd
 
       - name: Upload windows patch
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: windows-patch-${{ env.VERSION }}
           path: ${{ github.workspace }}\*.patch
