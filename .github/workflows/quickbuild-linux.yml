@@ -49,7 +49,7 @@ jobs:
           name: linux-src-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 23422234933
+          run-id: 23463520018
 
       - name: Download out directory
         uses: actions/download-artifact@v7
@@ -57,7 +57,7 @@ jobs:
           name: chromium-out-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 23422234933
+          run-id: 23463520018
 
       - name: Download versioned branding patches
         uses: actions/download-artifact@v7
@@ -65,7 +65,7 @@ jobs:
           name: linux-patch-${{ env.VERSION }}
           path: /home/runner/work/gollum/gollum/chromium-src
           github-token: ${{ secrets.PAT }}
-          run-id: 23453332832
+          run-id: 23471803389
 
       - uses: actions/checkout@v5
         with:
@@ -112,6 +112,7 @@ jobs:
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-root-store.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-banned-tld.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-dns.patch
+          patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-baraqah-search-engine.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-notrash-component-extension.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-gaia-to-baia.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/desktop/baraqah$VMAJOR-baraqah-safe-browsing.patch
