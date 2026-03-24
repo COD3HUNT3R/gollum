@@ -100,10 +100,10 @@ jobs:
         shell: bash
         run: |
           cd $SRCDIR && ls -lsh
-          tar -xf chromium-$VERSION.tar.xz
+          tar -xf chromium-$VERSION.tar.zst
           tar -xf out.tar.zst
           ls -lsh
-          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          rm -f chromium-$VERSION.tar.zst out.tar.zst
           mv out chromium-$VERSION && cd chromium-$VERSION
           patch -p1 < ../baraqah$VMAJOR-$VERSION-branding.patch
           patch -p1 < ../patches/baraqah/$VMAJOR/common/baraqah$VMAJOR-component-update-url.patch
