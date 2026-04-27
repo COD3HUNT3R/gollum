@@ -10,8 +10,8 @@ jobs:
   quickandroid:
       runs-on: ubuntu-latest
       env:
-        VMAJOR: 145
-        VERSION: 145.0.7632.75
+        VMAJOR: 147
+        VERSION: 147.0.7727.101
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
