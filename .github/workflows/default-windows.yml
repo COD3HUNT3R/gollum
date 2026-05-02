@@ -119,7 +119,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.SRCDIR }}/chromium-$VERSION
-          ninja -j 4 -C out/release content/public/common
+          timeout 5h ninja -j 4 -C out/release content/public/common
 
       - name: Compress artifacts
         shell: bash
