@@ -12,7 +12,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         VMAJOR: 147
-        VERSION: 147.0.7727.55
+        VERSION: 147.0.7727.137
         SRCDIR: chromium-src
       steps:
       - name: Maximize build space
