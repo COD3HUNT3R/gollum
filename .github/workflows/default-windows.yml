@@ -387,6 +387,63 @@ jobs:
           cd ${{ env.SRCDIR }}/chromium-${{ env.VERSION }}
           ninja -j 4 -C out/release chrome/browser
 
+      - name: Compress artifacts
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }}/chromium-$VERSION
+          ZSTD_CLEVEL=12 tar -I zstd --force-local -cvpf D:/a/gollum/gollum/chromium-src/out.tar.zst ./out
+
+      - name: Upload out directory
+        uses: actions/upload-artifact@v6
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src\out.tar.zst
+          overwrite: true
+
+  build6:
+      needs: build5
+      runs-on: windows-latest
+      env:
+        VMAJOR: 147
+        VERSION: 147.0.7727.138
+        SRCDIR: chromium-src
+        DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+        MSYS: winsymlinks:native
+      steps:
+      - name: Download source tarball
+        uses: actions/download-artifact@v7
+        with:
+          name: windows-src-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Download out directory
+        uses: actions/download-artifact@v7
+        with:
+          name: chromium-out-${{ env.VERSION }}
+          path: ${{ github.workspace }}\chromium-src
+
+      - name: Clone depot_tools
+        shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        run: |
+          cd ${{ env.SRCDIR }}
+          git config --global depot-tools.allowGlobalGitConfig true
+          echo "Clone depot_tools..."
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+          echo "::add-path::$GITHUB_WORKSPACE/chromium-src/depot_tools"
+
+      - name: Extract tar
+        shell: bash
+        run: |
+          cd ${{ env.SRCDIR }} && ls
+          tar -xf chromium-$VERSION.tar.xz
+          tar -xf out.tar.zst
+          ls -lsh
+          rm -f chromium-$VERSION.tar.xz out.tar.zst
+          mv out chromium-$VERSION && cd chromium-$VERSION
+          pwd && ls -lsh
+
       - name: Build chrome
         shell: bash
         run: |
